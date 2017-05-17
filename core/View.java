@@ -3,6 +3,7 @@ import javax.swing.*;
 
 public class View extends JInternalFrame{
 
+	//Test
 	GameControl myGame;
 	private JPanel viewPanel;
 
