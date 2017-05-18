@@ -3,17 +3,21 @@ import javax.swing.*;
 
 public class View extends JInternalFrame{
 
-	//Test
-	GameControl myGame;
-	private JPanel viewPanel;
+	private Frame frame;
+	private GameModel myGame;
 
 	/**
 	 * 
 	 * @param game
 	 */
-	public View(GameControl game) {
-		// TODO - implement View.View
-		throw new UnsupportedOperationException();
+	public View(GameModel game, Frame mainFrame) {
+		myGame = game;
+		frame = mainFrame;
+
+		getContentPane().add(game.getPanel());
+		setTitle(game.getGameTitle());
+
+		setVisible(true);
 	}
 
 }

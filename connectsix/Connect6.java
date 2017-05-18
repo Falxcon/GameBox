@@ -1,35 +1,42 @@
 package connectsix;
 
-import javax.swing.JPanel;
-
 /**
  *@author Tom Wittal
  */
 
-public class Connect6 extends core.GameControl{
-	
+public class Connect6 extends core.GameModel{
+
+	public String title;
+
 	private int[][] brett;
 	private int aktiverSpieler;
-	private int spielerZüge;
+	private int spielerZÃ¼ge;
 	private final int reihe = 6;
 	
 	
-	public Connect6(int g){
+	public Connect6(){
+		title = "Connect Six";
+		viewPanel = new StartPanel(this);
+	}
+
+	public void start(int g){
 		if(g < 6) g = 6;
 		if(g > 20) g = 20;
-		
+
 		brett = new int[g][g];
 		for(int i = 0; i < g; i++) {
 			for(int j = 0; j < g; j++) {
 				brett[i][j] = 0;
 			}
 		}
-		
+
 		aktiverSpieler = 1;
-		spielerZüge = 1;
+		spielerZÃ¼ge = 1;
+
+		viewPanel = new GUI(g, this);
 	}
 	
-	public int gibLänge(){
+	public int gibLÃ¤nge(){
 		return brett.length;
 	}
 	
@@ -42,10 +49,10 @@ public class Connect6 extends core.GameControl{
 		return brett[x][y];
 	}
 	
-	public boolean prüfe(){
+	public boolean prÃ¼fe(){
 		//waagerecht
-		for(int x = 0; x < gibLänge(); x++){
-			for(int y = 0; y + reihe <= gibLänge(); y++){
+		for(int x = 0; x < gibLÃ¤nge(); x++){
+			for(int y = 0; y + reihe <= gibLÃ¤nge(); y++){
 				boolean gefunden = true;
 				for(int i = 0; i < reihe; i++){
 					if(brett[x][y+i] != aktiverSpieler) gefunden = false;
@@ -55,8 +62,8 @@ public class Connect6 extends core.GameControl{
 		}
 		
 		//senkrecht
-		for(int x = 0; x + reihe <= gibLänge(); x++){
-			for(int y = 0; y < gibLänge(); y++){
+		for(int x = 0; x + reihe <= gibLÃ¤nge(); x++){
+			for(int y = 0; y < gibLÃ¤nge(); y++){
 				boolean gefunden = true;
 				for(int i = 0; i < reihe; i++){
 					if(brett[x+i][y] != aktiverSpieler) gefunden = false;
@@ -66,8 +73,8 @@ public class Connect6 extends core.GameControl{
 		}
 		
 		//diagonal [\]
-		for(int x = 0; x + reihe <= gibLänge(); x++){
-			for(int y = 0; y  + reihe <= gibLänge(); y++){
+		for(int x = 0; x + reihe <= gibLÃ¤nge(); x++){
+			for(int y = 0; y  + reihe <= gibLÃ¤nge(); y++){
 				boolean gefunden = true;
 				for(int i = 0; i < reihe; i++){
 					if(brett[x+i][y+i] != aktiverSpieler) gefunden = false;
@@ -77,8 +84,8 @@ public class Connect6 extends core.GameControl{
 		}
 		
 		//diagonal [/]
-		for(int x = 0; x + reihe <= gibLänge(); x++){
-			for(int y = gibLänge() - 1; y  >= reihe; y--){
+		for(int x = 0; x + reihe <= gibLÃ¤nge(); x++){
+			for(int y = gibLÃ¤nge() - 1; y  >= reihe; y--){
 				boolean gefunden = true;
 				for(int i = 0; i < reihe; i++){
 					if(brett[x+i][y-i] != aktiverSpieler) gefunden = false;
@@ -91,10 +98,10 @@ public class Connect6 extends core.GameControl{
 		return false;
 	}
 	
-	public boolean prüfeSpielfeldVoll(){
+	public boolean prÃ¼feSpielfeldVoll(){
 		boolean voll = true;
-		for(int x = 0; x < gibLänge(); x++){
-			for(int y = 0; y < gibLänge(); y++){
+		for(int x = 0; x < gibLÃ¤nge(); x++){
+			for(int y = 0; y < gibLÃ¤nge(); y++){
 				if(brett[x][y] == 0) voll = false;
 			}
 		}
@@ -112,36 +119,30 @@ public class Connect6 extends core.GameControl{
 	}
 	
 	public void spielerwechsel(){
-		spielerZüge--;
-		if(spielerZüge <= 0){
+		spielerZÃ¼ge--;
+		if(spielerZÃ¼ge <= 0){
 		
 			if(aktiverSpieler == 1) {
 				aktiverSpieler = 2;
-				spielerZüge = 2;
+				spielerZÃ¼ge = 2;
 			}
 			else {
 				aktiverSpieler = 1;
-				spielerZüge = 2;
+				spielerZÃ¼ge = 2;
 			}
 			
 		}
 	}
 
-	
-	
-	
-	@Override
-	public JPanel getPanel() {
-		JPanel panel = new JPanel();
-		
-		
-		return panel;
-	}
 
 	@Override
-	public int getUpdateInterval() {
-		return 1000;
+	public String getGameTitle() {
+		return title;
 	}
 	
 	
 }
+
+
+
+
