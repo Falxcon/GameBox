@@ -15,11 +15,7 @@ public class Frame extends JFrame{
 		setVisible(true);
 
 
-		//nur zum testen hier ausgeführt später über menubar
-		JInternalFrame aView = new View(new connectsix.Connect6(), this);
-		aView.setLocation(100, 100);
-		aView.setSize(400, 400);
-		desktopPane.add(aView);
+
 	}
 
 }
