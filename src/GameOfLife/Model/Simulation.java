@@ -147,19 +147,21 @@ public class Simulation extends Observable {
     }
 
     public void startSimulation() {
-        Runnable task = () -> {
-            while(Thread.currentThread().isAlive()) {
-                simulateNextGeneration();
-                try {
-                    Thread.sleep(refreshTime);
-                } catch ( InterruptedException e) {
-                    // Thread zerstört sich selbst
-                    return;
+        if (!thread.isAlive()) {
+            Runnable task = () -> {
+                while (Thread.currentThread().isAlive()) {
+                    simulateNextGeneration();
+                    try {
+                        Thread.sleep(refreshTime);
+                    } catch (InterruptedException e) {
+                        // Thread zerstört sich selbst
+                        return;
+                    }
                 }
-            }
-        };
-        Thread thread = new Thread(task);
-        thread.start();
+            };
+            thread = new Thread(task);
+            thread.start();
+        }
     }
 
     public void stopSimulation() {
