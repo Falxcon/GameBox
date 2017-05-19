@@ -1,10 +1,10 @@
 package GameOfLife.UserInterface;
 
-import GameOfLife.Model.Simulation;
+import GameOfLife.Model.GOLSimulation;
 
 import javax.swing.*;
 
-public class UIMenuBar extends JMenuBar {
+public class GOLMenuBar extends JMenuBar {
 
     private JMenu menuMod, menuSpeed, menuWindow, menuForm, menuCell;
     // menuMod
@@ -18,11 +18,11 @@ public class UIMenuBar extends JMenuBar {
     // menuCell
     private JMenuItem menuItemIncrease, menuItemDecrease;
 
-    private UIGridPanel gridPanel;
-    private Simulation simulation;
-    private UIMain main;
+    private GOLGridPanel gridPanel;
+    private GOLSimulation simulation;
+    private GOLMain main;
 
-    public UIMenuBar(Simulation simulation, UIGridPanel gridPanel, UIMain main) {
+    public GOLMenuBar(GOLSimulation simulation, GOLGridPanel gridPanel, GOLMain main) {
         this.gridPanel = gridPanel;
         this.simulation = simulation;
         this.main = main;
@@ -80,8 +80,8 @@ public class UIMenuBar extends JMenuBar {
 
         });
         menuWindow.add(menuItemClone);
-        // UIMain
-        menuItemView = new JMenuItem("UIMain");
+        // GOLMain
+        menuItemView = new JMenuItem("GOLMain");
         menuItemView.addActionListener(l -> {
 
         });
@@ -89,7 +89,6 @@ public class UIMenuBar extends JMenuBar {
         // Size
         menuItemSize = new JMenuItem("Size");
         menuItemSize.addActionListener(l -> {
-
         });
         menuWindow.add(menuItemSize);
     }

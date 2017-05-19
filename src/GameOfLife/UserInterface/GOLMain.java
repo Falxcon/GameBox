@@ -1,23 +1,23 @@
 package GameOfLife.UserInterface;
 
-import GameOfLife.Model.Simulation;
+import GameOfLife.Model.GOLSimulation;
 
 import javax.swing.*;
 
-public class UIMain extends JInternalFrame{
+public class GOLMain extends JInternalFrame{
 
-    private UIMenuBar menuBar;
-    private UIGridPanel gridPanel;
+    private GOLMenuBar menuBar;
+    private GOLGridPanel gridPanel;
 
-    private Simulation simulation;
+    private GOLSimulation simulation;
 
-    public UIMain() {
+    public GOLMain(int width, int height) {
         super("Game of Life", false, true);
-        simulation = new Simulation(25,25);
-        gridPanel = new UIGridPanel(simulation);
+        simulation = new GOLSimulation(width,height);
+        gridPanel = new GOLGridPanel(simulation);
         simulation.addObserver(gridPanel);
 
-        menuBar = new UIMenuBar(simulation, gridPanel, this);
+        menuBar = new GOLMenuBar(simulation, gridPanel, this);
         menuBar.addMenuMod();
         menuBar.addMenuSpeed();
         menuBar.addMenuForm();

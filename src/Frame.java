@@ -1,3 +1,5 @@
+import GameOfLife.UserInterface.GOLMain;
+
 import javax.swing.*;
 
 public class Frame extends JFrame{
@@ -12,7 +14,7 @@ public class Frame extends JFrame{
 		setContentPane(desktopPane);
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setVisible(true);
-		desktopPane.add(new GameOfLife.UserInterface.UIMain());
+		desktopPane.add(new GOLMain(25, 25));
 	}
 
 }

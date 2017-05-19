@@ -1,6 +1,6 @@
 package GameOfLife.UserInterface;
 
-import GameOfLife.Model.Simulation;
+import GameOfLife.Model.GOLSimulation;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,15 +9,15 @@ import java.awt.event.MouseEvent;
 import java.util.Observable;
 import java.util.Observer;
 
-public class UIGridPanel extends JPanel implements Observer{
+public class GOLGridPanel extends JPanel implements Observer{
 
     private int cellSize;
     private boolean draw;
 
     private Color dead, alive;
-    private Simulation simulation;
+    private GOLSimulation simulation;
 
-    public UIGridPanel(Simulation simulation) {
+    public GOLGridPanel(GOLSimulation simulation) {
         cellSize = 10;
         draw = false;
         dead = Color.BLACK;
@@ -83,14 +83,14 @@ public class UIGridPanel extends JPanel implements Observer{
             JMenuItem popupDead = new JMenuItem("Change dead cell color");
             popupDead.addActionListener(e -> {
                 dead = JColorChooser.showDialog(this, "Dead", dead);
-                UIGridPanel.this.repaint();
+                GOLGridPanel.this.repaint();
             });
             add(popupDead);
             // change the color of alive cells
             JMenuItem popupAlive = new JMenuItem("Change alive cell color");
             popupAlive.addActionListener(e -> {
                 alive = JColorChooser.showDialog(this, "Alive", alive);
-                UIGridPanel.this.repaint();
+                GOLGridPanel.this.repaint();
             });
             add(popupAlive);
         }
@@ -124,7 +124,7 @@ public class UIGridPanel extends JPanel implements Observer{
 
             if (x > 0 && x < simulation.getGrid().length * cellSize && y > 0 && y < simulation.getGrid()[0].length * cellSize) {
                 simulation.setCell(x / cellSize, y / cellSize, true);
-                UIGridPanel.this.repaint();
+                GOLGridPanel.this.repaint();
             }
         }
 

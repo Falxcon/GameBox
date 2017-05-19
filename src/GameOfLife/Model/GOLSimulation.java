@@ -2,14 +2,14 @@ package GameOfLife.Model;
 
 import java.util.*;
 
-public class Simulation extends Observable {
+public class GOLSimulation extends Observable {
 
     private boolean[][] grid;
 
     private int refreshTime;
     private Thread thread;
 
-    public Simulation(int width, int height) {
+    public GOLSimulation(int width, int height) {
         grid = new boolean[width][height];
 
         refreshTime = 256;
