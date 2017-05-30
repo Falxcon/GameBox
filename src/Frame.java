@@ -1,4 +1,4 @@
-import GameOfLife.UserInterface.GOLMain;
+import gameoflife.userinterface.GOLMain;
 
 import javax.swing.*;
 
@@ -28,7 +28,7 @@ public class Frame extends JFrame{
 	    menuAdd = new JMenu("Add");
         menuBar.add(menuAdd);
 
-	    menuItemGOL = new JMenuItem("GameOfLife");
+	    menuItemGOL = new JMenuItem("gameoflife");
 	    menuItemGOL.addActionListener(l -> {
 	        desktopPane.add(new GOLMain(25, 25));
         });

@@ -1,4 +1,4 @@
-package GameOfLife.Model;
+package gameoflife.model;
 
 import java.util.*;
 
@@ -105,7 +105,7 @@ public class GOLSimulation extends Observable {
     }
 
     /**
-     * berrechnet die nÃ¤chste Generation des GameOfLife
+     * berrechnet die nÃ¤chste Generation des gameoflife
      */
     public void simulateNextGeneration() {
         boolean nextGrid[][] = new boolean[grid.length][grid[0].length];

@@ -1,6 +1,6 @@
-package GameOfLife.UserInterface;
+package gameoflife.userinterface;
 
-import GameOfLife.Model.GOLSimulation;
+import gameoflife.model.GOLSimulation;
 
 import javax.swing.*;
 
