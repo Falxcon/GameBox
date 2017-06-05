@@ -34,6 +34,12 @@ public class Frame extends JFrame{
         });
 	    menuAdd.add(menuItemGOL);
 
+		JMenuItem menuItemSokoban = new JMenuItem("sokoban");
+		menuItemSokoban.addActionListener(l -> {
+			desktopPane.add(new sokoban.View());
+		});
+		menuAdd.add(menuItemSokoban);
+
 	    return menuBar;
     }
 }
