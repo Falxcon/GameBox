@@ -60,41 +60,44 @@ public class Model extends Observable {
 
         board = new Field[width][height];
         Iterator<String> iterator = lines.iterator();
-        int rowIndex = 0;
-        while(iterator.hasNext()){
-            String row = iterator.next();
-            int colIndex = 0;
-            for(char ch : row.toCharArray()){
-                switch(ch){
+
+        for(int row = 0; row < height; row++){
+
+            String line = iterator.next();
+            while(line.length() < width){
+                line += " ";
+            }
+            char[] characters = line.toCharArray();
+
+            for(int col = 0; col < width; col++){
+                switch(characters[col]){
                     case '#':
-                        board[rowIndex][colIndex] = Field.WALL;
+                        board[col][row] = Field.WALL;
                         break;
                     case ' ':
-                        board[rowIndex][colIndex] = Field.EMPTY;
+                        board[col][row] = Field.EMPTY;
                         break;
                     case '@':
-                        board[rowIndex][colIndex] = Field.PLAYER;
+                        board[col][row] = Field.PLAYER;
                         break;
                     case '.':
-                        board[rowIndex][colIndex] = Field.TARGET;
+                        board[col][row] = Field.TARGET;
                         break;
                     case '$':
-                        board[rowIndex][colIndex] = Field.OBJECT;
+                        board[col][row] = Field.OBJECT;
                         break;
                     case '*':
-                        board[rowIndex][colIndex] = Field.OOT;
+                        board[col][row] = Field.OOT;
                         break;
                     case '+':
-                        board[rowIndex][colIndex] = Field.POT;
+                        board[col][row] = Field.POT;
                         break;
                     default:
-                        board[rowIndex][colIndex] = Field.EMPTY;
+                        board[col][row] = Field.EMPTY;
                         break;
 
                 }
-                colIndex++;
             }
-            rowIndex++;
         }
 
         setChanged();
@@ -106,13 +109,9 @@ public class Model extends Observable {
     }
 
 
-    public Field[][] getBoard() {
-        return board;
-    }
-
-    public Field getFieldByCoords(int row, int col){
-        if(board[row][col] == null) return Field.EMPTY;
-        else return board[row][col];
+    public Field getFieldByCoordinate(int col, int row){
+        if(board[col][row] == null) return Field.EMPTY;
+        else return board[col][row];
     }
 
     public int getWidth() {
