@@ -8,9 +8,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Observer;
 
-/**
- * Created by tomwi on 29.05.2017.
- */
 public class View extends JInternalFrame implements Observer{
     Model model;
     JLabel[][] labelGrid;

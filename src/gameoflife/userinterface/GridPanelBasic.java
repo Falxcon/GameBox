@@ -1,6 +1,6 @@
 package gameoflife.userinterface;
 
-import gameoflife.model.GOLSimulation;
+import gameoflife.model.Simulation;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,31 +9,21 @@ import java.awt.event.MouseEvent;
 import java.util.Observable;
 import java.util.Observer;
 
-public class GOLGridPanel extends JPanel implements Observer{
+public class GridPanelBasic extends JPanel implements Observer{
 
-    private int cellSize;
-    private boolean draw;
+    protected int cellSize;
 
     private Color dead, alive;
-    private GOLSimulation simulation;
+    protected Simulation simulation;
 
-    public GOLGridPanel(GOLSimulation simulation) {
+    public GridPanelBasic(Simulation simulation) {
         cellSize = 10;
-        draw = false;
         dead = Color.BLACK;
         alive = Color.GREEN;
 
         this.simulation = simulation;
 
         addMouseListener(new Listener());
-        addMouseMotionListener(new Listener());
-    }
-
-    /**
-     * wechselt zwischen malen (true) und setzen (false)
-     */
-    public void switchDrawMode() {
-        draw = !draw;
     }
 
     @Override
@@ -83,51 +73,20 @@ public class GOLGridPanel extends JPanel implements Observer{
             JMenuItem popupDead = new JMenuItem("Change dead cell color");
             popupDead.addActionListener(e -> {
                 dead = JColorChooser.showDialog(this, "Dead", dead);
-                GOLGridPanel.this.repaint();
+                GridPanelBasic.this.repaint();
             });
             add(popupDead);
             // change the color of alive cells
             JMenuItem popupAlive = new JMenuItem("Change alive cell color");
             popupAlive.addActionListener(e -> {
                 alive = JColorChooser.showDialog(this, "Alive", alive);
-                GOLGridPanel.this.repaint();
+                GridPanelBasic.this.repaint();
             });
             add(popupAlive);
         }
     }
 
     class Listener extends MouseAdapter {
-        // setzen
-        @Override
-        public void mousePressed(MouseEvent e) {
-            if (!draw) {
-                if (SwingUtilities.isLeftMouseButton(e)) {
-                    doUpdate(e);
-                }
-            }
-        }
-
-        // malen
-        @Override
-        public void mouseDragged(MouseEvent e) {
-            if (draw) {
-                if (SwingUtilities.isLeftMouseButton(e)) {
-                    doUpdate(e);
-                }
-            }
-        }
-
-        // aktualisiert die simulation an der Position der Maus
-        private void doUpdate(MouseEvent e) {
-            int x = e.getX();
-            int y = e.getY();
-
-            if (x > 0 && x < simulation.getGrid().length * cellSize && y > 0 && y < simulation.getGrid()[0].length * cellSize) {
-                simulation.setCell(x / cellSize, y / cellSize, true);
-                GOLGridPanel.this.repaint();
-            }
-        }
-
         // öffnet neues PopupMenu bei einem rechtklicks
         @Override
         public void mouseReleased(MouseEvent e){
@@ -135,7 +94,6 @@ public class GOLGridPanel extends JPanel implements Observer{
                 doPopup(e);
             }
         }
-
         // erstellt neues popupMenu an der maus position
         private void doPopup(MouseEvent e){
             PopupMenu popupMenu = new PopupMenu();

@@ -1,10 +1,10 @@
 package gameoflife.userinterface;
 
-import gameoflife.model.GOLSimulation;
+import gameoflife.model.Simulation;
 
 import javax.swing.*;
 
-public class GOLMenuBar extends JMenuBar {
+public class MenuBar extends JMenuBar {
 
     private JMenu menuMod, menuSpeed, menuWindow, menuForm, menuCell;
     // menuMod
@@ -12,29 +12,16 @@ public class GOLMenuBar extends JMenuBar {
     // menuSpeed
     private JMenuItem menuItemFaster, menuItemSlower;
     // menuWindow
-    private JMenuItem menuItemClone, menuItemView, menuItemSize;
+    private JMenuItem menuItemClone, menuItemView;
     // menuForm
     private JMenuItem menuItemReset, menuItemRandom, menuItemGlider, menuItemLWWS, menuItemPento;
     // menuCell
     private JMenuItem menuItemIncrease, menuItemDecrease;
 
-    private GOLGridPanel gridPanel;
-    private GOLSimulation simulation;
-    private GOLMain main;
-
-    public GOLMenuBar(GOLSimulation simulation, GOLGridPanel gridPanel, GOLMain main) {
-        this.gridPanel = gridPanel;
-        this.simulation = simulation;
-        this.main = main;
-
-        initMenuMod();
-        initMenuSpeed();
-        initMenuWindow();
-        initMenuForm();
-        initMenuCell();
+    public MenuBar() {
     }
 
-    private void initMenuMod() {
+    public void addMenuMod(Simulation simulation, GridPanelMain gridPanelMainView) {
         menuMod = new JMenu("Mod");
         // Run
         menuItemRun = new JMenuItem("Run");
@@ -51,12 +38,14 @@ public class GOLMenuBar extends JMenuBar {
         // Draw
         menuItemDraw = new JMenuItem("Draw");
         menuItemDraw.addActionListener(l -> {
-            gridPanel.switchDrawMode();
+            gridPanelMainView.switchDrawMode();
         });
         menuMod.add(menuItemDraw);
+
+        add(menuMod);
     }
 
-    private void initMenuSpeed() {
+    public void addMenuSpeed(Simulation simulation) {
         menuSpeed = new JMenu("Speed");
         // Faster
         menuItemFaster = new JMenuItem("Faster");
@@ -70,9 +59,11 @@ public class GOLMenuBar extends JMenuBar {
             simulation.increaseRefreshTime();
         });
         menuSpeed.add(menuItemSlower);
+
+        add(menuSpeed);
     }
 
-    private void initMenuWindow() {
+    public void addMenuWindow(Simulation simulation, JDesktopPane jDesktopPane) {
         menuWindow = new JMenu("Window");
         // Clone
         menuItemClone = new JMenuItem("Clone");
@@ -80,20 +71,17 @@ public class GOLMenuBar extends JMenuBar {
 
         });
         menuWindow.add(menuItemClone);
-        // GOLMain
-        menuItemView = new JMenuItem("GOLMain");
+        // View
+        menuItemView = new JMenuItem("View");
         menuItemView.addActionListener(l -> {
-
+            jDesktopPane.add(new IFrameView(simulation));
         });
         menuWindow.add(menuItemView);
-        // Size
-        menuItemSize = new JMenuItem("Size");
-        menuItemSize.addActionListener(l -> {
-        });
-        menuWindow.add(menuItemSize);
+
+        add(menuWindow);
     }
 
-    private void initMenuForm() {
+    public void addMenuForm(Simulation simulation) {
         menuForm = new JMenu("Form");
         // Reset
         menuItemReset = new JMenuItem("Reset");
@@ -125,43 +113,27 @@ public class GOLMenuBar extends JMenuBar {
             simulation.createPento();
         });
         menuForm.add(menuItemPento);
+
+        add(menuForm);
     }
 
-    private void initMenuCell() {
+    public void addMenuCell(GridPanelBasic gridPanel, IFrameBasic mainView) {
         menuCell = new JMenu("Cell");
         // Increase
         menuItemIncrease = new JMenuItem("Increase");
         menuItemIncrease.addActionListener(l -> {
             gridPanel.increaseCellSize();
-            main.setWindowSize();
+            mainView.setWindowSize(gridPanel);
         });
         menuCell.add(menuItemIncrease);
         // Decrease
         menuItemDecrease = new JMenuItem("Decrease");
         menuItemDecrease.addActionListener(l -> {
             gridPanel.decreaseCellSize();
-            main.setWindowSize();
+            mainView.setWindowSize(gridPanel);
         });
         menuCell.add(menuItemDecrease);
-    }
 
-    public void addMenuMod() {
-        add(menuMod);
-    }
-
-    public void addMenuSpeed() {
-        add(menuSpeed);
-    }
-
-    public void addMenuWindow() {
-        add(menuWindow);
-    }
-
-    public void addMenuForm() {
-        add(menuForm);
-    }
-
-    public void addMenuCell() {
         add(menuCell);
     }
 }

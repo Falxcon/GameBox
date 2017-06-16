@@ -3,9 +3,6 @@ package sokoban;
 import java.io.*;
 import java.util.*;
 
-/**
- * Created by tomwi on 29.05.2017.
- */
 public class Model extends Observable {
 
     Field[][] board;
@@ -14,7 +11,7 @@ public class Model extends Observable {
     boolean isRunning;
     String currentMap;
 
-    final String mapsDirectory = "sokoban maps/";
+    final String mapsDirectory = "src/sokoban/maps/";
 
 
     Model(){
