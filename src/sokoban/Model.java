@@ -11,12 +11,76 @@ public class Model extends Observable {
     Field[][] board;
 
     int width, height;
+    boolean isRunning;
+    String currentMap;
 
     final String mapsDirectory = "sokoban maps/";
 
 
     Model(){
+        width = 0;
+        height = 0;
+        isRunning = false;
+    }
 
+    public void movePlayer(int addX, int addY){
+        if(!isRunning) return;
+
+        int playerX = -1, playerY = -1;
+        for(int x = 0; x < width; x++){
+            for(int y = 0; y < width; y++){
+                if(board[x][y] == Field.PLAYER || board[x][y] == Field.POT){
+                    playerX = x;
+                    playerY = y;
+                    break;
+                }
+            }
+        }
+
+        if(playerX == -1 || playerY == -1) return;
+        Field playerField = board[playerX][playerY];
+        Field nextField = board[playerX + addX][playerY + addY];
+
+        if(nextField == Field.WALL) return;
+
+        if(nextField == Field.EMPTY || nextField == Field.TARGET){
+
+            if(nextField == Field.EMPTY) board[playerX + addX][playerY + addY] = Field.PLAYER;
+            else board[playerX + addX][playerY + addY] = Field.POT;
+            if(playerField == Field.PLAYER) board[playerX][playerY] = Field.EMPTY;
+            else board[playerX][playerY] = Field.TARGET;
+        }
+        else if(nextField == Field.OBJECT || nextField == Field.OOT){
+
+            Field afterNextField = board[playerX + addX + addX][playerY + addY + addY];
+            if(afterNextField == Field.EMPTY || afterNextField == Field.TARGET){
+
+                if(afterNextField == Field.EMPTY) board[playerX + addX + addX][playerY + addY + addY] = Field.OBJECT;
+                else board[playerX + addX + addX][playerY + addY + addY] = Field.OOT;
+                if(nextField == Field.OBJECT) board[playerX + addX][playerY + addY] = Field.PLAYER;
+                else board[playerX + addX][playerY + addY] = Field.POT;
+                if(playerField == Field.PLAYER) board[playerX][playerY] = Field.EMPTY;
+                else board[playerX][playerY] = Field.TARGET;
+            }
+        }
+
+        checkSolved();
+        setChanged();
+        notifyObservers();
+    }
+
+    public void checkSolved(){
+        boolean solved = true;
+        for(int x = 0; x < width; x++){
+            for(int y = 0; y < width; y++){
+                if(board[x][y] == Field.OBJECT) solved = false;
+            }
+        }
+
+        if(solved){
+            isRunning = false;
+            System.out.println("Gz you solved the puzzle :D");
+        }
     }
 
 
@@ -55,8 +119,6 @@ public class Model extends Observable {
                 break;
             }
         }
-
-        System.out.println("width: " + width + " height: " + height);
 
         board = new Field[width][height];
         Iterator<String> iterator = lines.iterator();
@@ -100,6 +162,7 @@ public class Model extends Observable {
             }
         }
 
+        isRunning = true;
         setChanged();
         notifyObservers();
     }
