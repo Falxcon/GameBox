@@ -11,6 +11,7 @@ import java.util.Observer;
 
 public class GridPanelBasic extends JPanel implements Observer{
 
+    protected boolean index[][];
     protected int cellSize;
 
     private Color dead, alive;
@@ -22,8 +23,33 @@ public class GridPanelBasic extends JPanel implements Observer{
         alive = Color.GREEN;
 
         this.simulation = simulation;
+        initIndex();
 
         addMouseListener(new Listener());
+    }
+
+    private void initIndex() {
+        int xGridLenght = simulation.getGrid().length;
+        int yGridLenght = simulation.getGrid()[0].length;
+        index = new boolean[xGridLenght][yGridLenght];
+
+        for(int x = 0; x < xGridLenght; x++) {
+            for (int y = 0; y < yGridLenght; y++) {
+                index[x][y] = simulation.getGrid()[x][y];
+            }
+        }
+    }
+
+    public void rotate() {
+        int w = index.length;
+        int h = index[0].length;
+        boolean[][] ret = new boolean[h][w];
+        for (int i = 0; i < h; ++i) {
+            for (int j = 0; j < w; ++j) {
+                ret[i][j] = index[j][h - i - 1];
+            }
+        }
+        repaint();
     }
 
     @Override
@@ -34,8 +60,12 @@ public class GridPanelBasic extends JPanel implements Observer{
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        for(int x = 0; x < simulation.getGrid().length; x++) {
-            for (int y = 0; y < simulation.getGrid()[0].length; y++) {
+
+        int xGridLenght = index.length;
+        int yGridLenght = index[0].length;
+
+        for(int x = 0; x < xGridLenght; x++) {
+            for (int y = 0; y < yGridLenght; y++) {
                 if(simulation.getGrid()[x] [y]) {
                     g.setColor(alive);
                     g.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);

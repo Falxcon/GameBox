@@ -6,7 +6,7 @@ import javax.swing.*;
 
 public class MenuBar extends JMenuBar {
 
-    private JMenu menuMod, menuSpeed, menuWindow, menuForm, menuCell;
+    private JMenu menuMod, menuSpeed, menuWindow, menuForm, menuCell, menuRotate;
     // menuMod
     private JMenuItem menuItemRun, menuItemPause, menuItemDraw;
     // menuSpeed
@@ -17,6 +17,8 @@ public class MenuBar extends JMenuBar {
     private JMenuItem menuItemReset, menuItemRandom, menuItemGlider, menuItemLWWS, menuItemPento;
     // menuCell
     private JMenuItem menuItemIncrease, menuItemDecrease;
+    // menuRotate
+    private  JMenuItem menuItemClockwise;
 
     public MenuBar() {
     }
@@ -68,7 +70,7 @@ public class MenuBar extends JMenuBar {
         // Clone
         menuItemClone = new JMenuItem("Clone");
         menuItemClone.addActionListener(l -> {
-
+            jDesktopPane.add(new IFrameMain(simulation, jDesktopPane));
         });
         menuWindow.add(menuItemClone);
         // View
@@ -135,5 +137,18 @@ public class MenuBar extends JMenuBar {
         menuCell.add(menuItemDecrease);
 
         add(menuCell);
+    }
+
+    public void addMenuRotate(GridPanelBasic gridPanel, IFrameBasic iFrameBasic) {
+        menuRotate = new JMenu("Rotate");
+        // im Uhrzeigersinn drehen
+        menuItemClockwise = new JMenuItem("Clockwise");
+        menuItemClockwise.addActionListener(l -> {
+            gridPanel.rotate();
+            iFrameBasic.setWindowSize(gridPanel);
+        });
+        menuRotate.add(menuItemClockwise);
+
+        add(menuRotate);
     }
 }

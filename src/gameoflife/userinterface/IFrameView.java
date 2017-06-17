@@ -14,8 +14,13 @@ public class IFrameView extends IFrameBasic{
         gridPanelBasic = new GridPanelBasic(simulation);
         simulation.addObserver(gridPanelBasic);
 
+        initComponents();
+    }
+
+    private void initComponents() {
         menuBar = new MenuBar();
         menuBar.addMenuCell(gridPanelBasic, this);
+        menuBar.addMenuRotate(gridPanelBasic, this);
 
         add(gridPanelBasic);
         setJMenuBar(menuBar);

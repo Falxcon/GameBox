@@ -16,6 +16,21 @@ public class Simulation extends Observable {
         thread = new Thread();
     }
 
+    public Simulation(Simulation simulation) {
+        int xGridLength = simulation.getGrid().length;
+        int yGridLength = simulation.getGrid()[0].length;
+        grid = new boolean[xGridLength][yGridLength];
+
+        for (int x = 0; x < xGridLength; x++) {
+            for (int y = 0; y < yGridLength; y++) {
+                grid[x][y] = simulation.getGrid()[x][y];
+            }
+        }
+
+        refreshTime = simulation.refreshTime;
+        thread = new Thread();
+    }
+
     /**
      * alle Zellen werden in tote Zellen gesetzt
      */

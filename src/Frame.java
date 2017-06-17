@@ -19,6 +19,7 @@ public class Frame extends JFrame{
 		desktopPane.setDesktopManager(new DefaultDesktopManager());
 		setContentPane(desktopPane);
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		setLocationRelativeTo(null);
 		setVisible(true);
 	}
 
@@ -30,7 +31,7 @@ public class Frame extends JFrame{
 
 	    menuItemGOL = new JMenuItem("gameoflife");
 	    menuItemGOL.addActionListener(l -> {
-	        desktopPane.add(new IFrameMain(25, 25, desktopPane));
+	        desktopPane.add(new IFrameMain(25, 20, desktopPane));
         });
 	    menuAdd.add(menuItemGOL);
 
