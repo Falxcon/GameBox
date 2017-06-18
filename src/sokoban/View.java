@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Observer;
 
-public class View extends JInternalFrame implements Observer{
+public class View extends JInternalFrame implements Observer {
     Model model;
     JLabel[][] labelGrid;
     MoveAction moveUp, moveDown, moveRight, moveLeft;
@@ -16,7 +16,7 @@ public class View extends JInternalFrame implements Observer{
     int labelSize = 40;
     boolean firstUpdate;
 
-    public View(){
+    public View() {
         model = new Model();
         model.addObserver(this);
         setJMenuBar(initMenuBar());
@@ -28,14 +28,14 @@ public class View extends JInternalFrame implements Observer{
         firstUpdate = true;
     }
 
-    private void initGrid(int cols, int rows){
+    private void initGrid(int cols, int rows) {
         getContentPane().removeAll();
         setSize(cols * labelSize, (rows + 1) * labelSize);
         getContentPane().setLayout(new GridLayout(rows, cols));
         labelGrid = new JLabel[cols][rows];
 
-        for(int y = 0; y < rows; y++){
-            for(int x = 0; x < cols; x++){
+        for (int y = 0; y < rows; y++) {
+            for (int x = 0; x < cols; x++) {
                 labelGrid[x][y] = new JLabel();
                 labelGrid[x][y].setVisible(true);
                 //labelGrid[x][y].setSize(labelSize, labelSize);
@@ -44,7 +44,7 @@ public class View extends JInternalFrame implements Observer{
         }
     }
 
-    private JMenuBar initMenuBar(){
+    private JMenuBar initMenuBar() {
         JMenuBar menuBar = new JMenuBar();
         JMenu menuAdd = new JMenu("Map");
         menuBar.add(menuAdd);
@@ -61,17 +61,19 @@ public class View extends JInternalFrame implements Observer{
 
     class MoveAction extends AbstractAction {
         int dx, dy;
-        MoveAction(int dx, int dy){
+
+        MoveAction(int dx, int dy) {
             this.dx = dx;
             this.dy = dy;
         }
+
         @Override
         public void actionPerformed(ActionEvent e) {
             model.movePlayer(dx, dy);
         }
     }
 
-    private void initKeyBinds(){
+    private void initKeyBinds() {
         moveUp = new MoveAction(0, -1);
         moveDown = new MoveAction(0, 1);
         moveRight = new MoveAction(1, 0);
@@ -90,13 +92,13 @@ public class View extends JInternalFrame implements Observer{
     @Override
     public void update(java.util.Observable o, Object arg) {
 
-        if(firstUpdate){
+        if (firstUpdate) {
             initGrid(model.getWidth(), model.getHeight());
             firstUpdate = false;
         }
 
-        for(int y = 0; y < model.getHeight(); y++){
-            for(int x = 0; x < model.getWidth(); x++){
+        for (int y = 0; y < model.getHeight(); y++) {
+            for (int x = 0; x < model.getWidth(); x++) {
 
                 JLabel label = labelGrid[x][y];
                 try {

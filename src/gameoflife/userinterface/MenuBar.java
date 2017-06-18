@@ -18,7 +18,7 @@ public class MenuBar extends JMenuBar {
     // menuCell
     private JMenuItem menuItemIncrease, menuItemDecrease;
     // menuRotate
-    private  JMenuItem menuItemClockwise;
+    private JMenuItem menuItemClockwise;
 
     public MenuBar() {
     }

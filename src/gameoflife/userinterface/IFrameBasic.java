@@ -2,7 +2,7 @@ package gameoflife.userinterface;
 
 import javax.swing.*;
 
-public class IFrameBasic extends JInternalFrame{
+public class IFrameBasic extends JInternalFrame {
 
     public IFrameBasic() {
         super("Game of Life", false, true);

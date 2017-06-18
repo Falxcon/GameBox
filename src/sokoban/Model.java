@@ -14,19 +14,19 @@ public class Model extends Observable {
     final String mapsDirectory = "src/sokoban/maps/";
 
 
-    Model(){
+    Model() {
         width = 0;
         height = 0;
         isRunning = false;
     }
 
-    public void movePlayer(int addX, int addY){
-        if(!isRunning) return;
+    public void movePlayer(int addX, int addY) {
+        if (!isRunning) return;
 
         int playerX = -1, playerY = -1;
-        for(int x = 0; x < width; x++){
-            for(int y = 0; y < width; y++){
-                if(board[x][y] == Field.PLAYER || board[x][y] == Field.POT){
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < width; y++) {
+                if (board[x][y] == Field.PLAYER || board[x][y] == Field.POT) {
                     playerX = x;
                     playerY = y;
                     break;
@@ -34,29 +34,28 @@ public class Model extends Observable {
             }
         }
 
-        if(playerX == -1 || playerY == -1) return;
+        if (playerX == -1 || playerY == -1) return;
         Field playerField = board[playerX][playerY];
         Field nextField = board[playerX + addX][playerY + addY];
 
-        if(nextField == Field.WALL) return;
+        if (nextField == Field.WALL) return;
 
-        if(nextField == Field.EMPTY || nextField == Field.TARGET){
+        if (nextField == Field.EMPTY || nextField == Field.TARGET) {
 
-            if(nextField == Field.EMPTY) board[playerX + addX][playerY + addY] = Field.PLAYER;
+            if (nextField == Field.EMPTY) board[playerX + addX][playerY + addY] = Field.PLAYER;
             else board[playerX + addX][playerY + addY] = Field.POT;
-            if(playerField == Field.PLAYER) board[playerX][playerY] = Field.EMPTY;
+            if (playerField == Field.PLAYER) board[playerX][playerY] = Field.EMPTY;
             else board[playerX][playerY] = Field.TARGET;
-        }
-        else if(nextField == Field.OBJECT || nextField == Field.OOT){
+        } else if (nextField == Field.OBJECT || nextField == Field.OOT) {
 
             Field afterNextField = board[playerX + addX + addX][playerY + addY + addY];
-            if(afterNextField == Field.EMPTY || afterNextField == Field.TARGET){
+            if (afterNextField == Field.EMPTY || afterNextField == Field.TARGET) {
 
-                if(afterNextField == Field.EMPTY) board[playerX + addX + addX][playerY + addY + addY] = Field.OBJECT;
+                if (afterNextField == Field.EMPTY) board[playerX + addX + addX][playerY + addY + addY] = Field.OBJECT;
                 else board[playerX + addX + addX][playerY + addY + addY] = Field.OOT;
-                if(nextField == Field.OBJECT) board[playerX + addX][playerY + addY] = Field.PLAYER;
+                if (nextField == Field.OBJECT) board[playerX + addX][playerY + addY] = Field.PLAYER;
                 else board[playerX + addX][playerY + addY] = Field.POT;
-                if(playerField == Field.PLAYER) board[playerX][playerY] = Field.EMPTY;
+                if (playerField == Field.PLAYER) board[playerX][playerY] = Field.EMPTY;
                 else board[playerX][playerY] = Field.TARGET;
             }
         }
@@ -66,28 +65,28 @@ public class Model extends Observable {
         notifyObservers();
     }
 
-    public void checkSolved(){
+    public void checkSolved() {
         boolean solved = true;
-        for(int x = 0; x < width; x++){
-            for(int y = 0; y < width; y++){
-                if(board[x][y] == Field.OBJECT) solved = false;
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < width; y++) {
+                if (board[x][y] == Field.OBJECT) solved = false;
             }
         }
 
-        if(solved){
+        if (solved) {
             isRunning = false;
             System.out.println("Gz you solved the puzzle :D");
         }
     }
 
 
-    public void loadMap(String mapName){
+    public void loadMap(String mapName) {
 
         File file = new File(mapsDirectory + mapName + ".txt");
         FileInputStream fileInputStream;
         try {
             fileInputStream = new FileInputStream(file);
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println("File not Found");
             return;
         }
@@ -97,7 +96,7 @@ public class Model extends Observable {
         String inputLine;
         try {
             inputLine = fileInput.readLine();
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println("File empty");
             return;
         }
@@ -106,13 +105,13 @@ public class Model extends Observable {
         width = inputLine.length();
         height = 0;
 
-        while(inputLine != null){
+        while (inputLine != null) {
             lines.add(inputLine);
             height++;
-            if(inputLine.length() > width) width = inputLine.length();
+            if (inputLine.length() > width) width = inputLine.length();
             try {
                 inputLine = fileInput.readLine();
-            } catch (IOException e){
+            } catch (IOException e) {
                 break;
             }
         }
@@ -120,16 +119,16 @@ public class Model extends Observable {
         board = new Field[width][height];
         Iterator<String> iterator = lines.iterator();
 
-        for(int row = 0; row < height; row++){
+        for (int row = 0; row < height; row++) {
 
             String line = iterator.next();
-            while(line.length() < width){
+            while (line.length() < width) {
                 line += " ";
             }
             char[] characters = line.toCharArray();
 
-            for(int col = 0; col < width; col++){
-                switch(characters[col]){
+            for (int col = 0; col < width; col++) {
+                switch (characters[col]) {
                     case '#':
                         board[col][row] = Field.WALL;
                         break;
@@ -164,13 +163,13 @@ public class Model extends Observable {
         notifyObservers();
     }
 
-    public void saveMap(String mapName){
+    public void saveMap(String mapName) {
 
     }
 
 
-    public Field getFieldByCoordinate(int col, int row){
-        if(board[col][row] == null) return Field.EMPTY;
+    public Field getFieldByCoordinate(int col, int row) {
+        if (board[col][row] == null) return Field.EMPTY;
         else return board[col][row];
     }
 

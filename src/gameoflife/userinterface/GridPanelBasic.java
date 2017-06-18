@@ -9,7 +9,7 @@ import java.awt.event.MouseEvent;
 import java.util.Observable;
 import java.util.Observer;
 
-public class GridPanelBasic extends JPanel implements Observer{
+public class GridPanelBasic extends JPanel implements Observer {
 
     protected boolean index[][];
     protected int cellSize;
@@ -33,7 +33,7 @@ public class GridPanelBasic extends JPanel implements Observer{
         int yGridLenght = simulation.getGrid()[0].length;
         index = new boolean[xGridLenght][yGridLenght];
 
-        for(int x = 0; x < xGridLenght; x++) {
+        for (int x = 0; x < xGridLenght; x++) {
             for (int y = 0; y < yGridLenght; y++) {
                 index[x][y] = simulation.getGrid()[x][y];
             }
@@ -64,9 +64,9 @@ public class GridPanelBasic extends JPanel implements Observer{
         int xGridLenght = index.length;
         int yGridLenght = index[0].length;
 
-        for(int x = 0; x < xGridLenght; x++) {
+        for (int x = 0; x < xGridLenght; x++) {
             for (int y = 0; y < yGridLenght; y++) {
-                if(simulation.getGrid()[x] [y]) {
+                if (simulation.getGrid()[x][y]) {
                     g.setColor(alive);
                     g.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
                 } else {
@@ -98,7 +98,7 @@ public class GridPanelBasic extends JPanel implements Observer{
     }
 
     class PopupMenu extends JPopupMenu {
-        public PopupMenu(){
+        public PopupMenu() {
             // change the color of dead Cells
             JMenuItem popupDead = new JMenuItem("Change dead cell color");
             popupDead.addActionListener(e -> {
@@ -119,13 +119,14 @@ public class GridPanelBasic extends JPanel implements Observer{
     class Listener extends MouseAdapter {
         // öffnet neues PopupMenu bei einem rechtklicks
         @Override
-        public void mouseReleased(MouseEvent e){
+        public void mouseReleased(MouseEvent e) {
             if (SwingUtilities.isRightMouseButton(e)) {
                 doPopup(e);
             }
         }
+
         // erstellt neues popupMenu an der maus position
-        private void doPopup(MouseEvent e){
+        private void doPopup(MouseEvent e) {
             PopupMenu popupMenu = new PopupMenu();
             popupMenu.show(e.getComponent(), e.getX(), e.getY());
         }

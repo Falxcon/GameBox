@@ -15,7 +15,7 @@ public class IFrameMain extends IFrameBasic {
     public IFrameMain(int width, int height, JDesktopPane jdp) {
         this.jDesktopPane = jdp;
 
-        this.simulation = new Simulation(width,height);
+        this.simulation = new Simulation(width, height);
         this.gridPanelMain = new GridPanelMain(simulation);
         this.simulation.addObserver(gridPanelMain);
 

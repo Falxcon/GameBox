@@ -2,7 +2,7 @@ package gameoflife.userinterface;
 
 import gameoflife.model.Simulation;
 
-public class IFrameView extends IFrameBasic{
+public class IFrameView extends IFrameBasic {
 
     private MenuBar menuBar;
     private GridPanelBasic gridPanelBasic;

@@ -36,6 +36,7 @@ public class GridPanelMain extends GridPanelBasic {
                 }
             }
         }
+
         // malen
         @Override
         public void mouseDragged(MouseEvent e) {
