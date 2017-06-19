@@ -2,17 +2,32 @@ package gameoflife.model;
 
 import java.util.*;
 
-public class GOLSimulation extends Observable {
+public class Simulation extends Observable {
 
     private boolean[][] grid;
 
     private int refreshTime;
     private Thread thread;
 
-    public GOLSimulation(int width, int height) {
+    public Simulation(int width, int height) {
         grid = new boolean[width][height];
 
         refreshTime = 256;
+        thread = new Thread();
+    }
+
+    public Simulation(Simulation simulation) {
+        int xGridLength = simulation.getGrid().length;
+        int yGridLength = simulation.getGrid()[0].length;
+        grid = new boolean[xGridLength][yGridLength];
+
+        for (int x = 0; x < xGridLength; x++) {
+            for (int y = 0; y < yGridLength; y++) {
+                grid[x][y] = simulation.getGrid()[x][y];
+            }
+        }
+
+        refreshTime = simulation.refreshTime;
         thread = new Thread();
     }
 
@@ -34,7 +49,7 @@ public class GOLSimulation extends Observable {
      */
     public void createRandomCells() {
         Random random = new Random();
-        for(int x = 0; x < grid.length; x++) {
+        for (int x = 0; x < grid.length; x++) {
             for (int y = 0; y < grid[x].length; y++) {
                 grid[x][y] = random.nextBoolean();
             }
@@ -97,11 +112,14 @@ public class GOLSimulation extends Observable {
 
     /**
      * Setzt die Zelle an den Koordinaten x,y auf lebend
+     *
      * @param x Grid Koordinate
      * @param y Grid Koordinate
      */
     public void setCell(int x, int y, boolean b) {
         grid[x][y] = b;
+        setChanged();
+        notifyObservers();
     }
 
     /**
@@ -110,33 +128,31 @@ public class GOLSimulation extends Observable {
     public void simulateNextGeneration() {
         boolean nextGrid[][] = new boolean[grid.length][grid[0].length];
 
-        for(int x = 0; x < grid.length; x++) {
+        for (int x = 0; x < grid.length; x++) {
             for (int y = 0; y < grid[x].length; y++) {
                 int mx = x - 1;
-                if(mx < 0) mx = grid.length - 1;
+                if (mx < 0) mx = grid.length - 1;
                 int my = y - 1;
-                if(my < 0) my = grid[x].length - 1;
+                if (my < 0) my = grid[x].length - 1;
                 int gx = (x + 1) % grid.length;
                 int gy = (y + 1) % grid[x].length;
 
                 int neighborCounter = 0;
-                if(grid[mx] [my]) neighborCounter++;
-                if(grid[mx] [y]) neighborCounter++;
-                if(grid[mx] [gy]) neighborCounter++;
-                if(grid[x] [my]) neighborCounter++;
-                if(grid[x] [gy]) neighborCounter++;
-                if(grid[gx] [my]) neighborCounter++;
-                if(grid[gx] [y]) neighborCounter++;
-                if(grid[gx] [gy]) neighborCounter++;
+                if (grid[mx][my]) neighborCounter++;
+                if (grid[mx][y]) neighborCounter++;
+                if (grid[mx][gy]) neighborCounter++;
+                if (grid[x][my]) neighborCounter++;
+                if (grid[x][gy]) neighborCounter++;
+                if (grid[gx][my]) neighborCounter++;
+                if (grid[gx][y]) neighborCounter++;
+                if (grid[gx][gy]) neighborCounter++;
 
-                if(neighborCounter < 2 || neighborCounter > 3) {
-                    nextGrid[x] [y] = false;
-                }
-                else if(neighborCounter == 2) {
-                    nextGrid[x] [y] = grid[x][y];
-                }
-                else {
-                    nextGrid[x] [y] = true;
+                if (neighborCounter < 2 || neighborCounter > 3) {
+                    nextGrid[x][y] = false;
+                } else if (neighborCounter == 2) {
+                    nextGrid[x][y] = grid[x][y];
+                } else {
+                    nextGrid[x][y] = true;
                 }
             }
         }
