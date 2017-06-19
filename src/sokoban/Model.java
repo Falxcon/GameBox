@@ -1,5 +1,6 @@
 package sokoban;
 
+import javax.swing.*;
 import java.io.*;
 import java.util.*;
 
@@ -8,7 +9,7 @@ import java.util.*;
  */
 public class Model extends Observable {
 
-    Field[][] board;
+    Field[][] board, previousBoard;
 
     int width, height;
     boolean isRunning;
@@ -28,7 +29,7 @@ public class Model extends Observable {
 
         int playerX = -1, playerY = -1;
         for(int x = 0; x < width; x++){
-            for(int y = 0; y < width; y++){
+            for(int y = 0; y < height; y++){
                 if(board[x][y] == Field.PLAYER || board[x][y] == Field.POT){
                     playerX = x;
                     playerY = y;
@@ -44,6 +45,7 @@ public class Model extends Observable {
         if(nextField == Field.WALL) return;
 
         if(nextField == Field.EMPTY || nextField == Field.TARGET){
+            arrayCopy(board, previousBoard);
 
             if(nextField == Field.EMPTY) board[playerX + addX][playerY + addY] = Field.PLAYER;
             else board[playerX + addX][playerY + addY] = Field.POT;
@@ -54,6 +56,7 @@ public class Model extends Observable {
 
             Field afterNextField = board[playerX + addX + addX][playerY + addY + addY];
             if(afterNextField == Field.EMPTY || afterNextField == Field.TARGET){
+                arrayCopy(board, previousBoard);
 
                 if(afterNextField == Field.EMPTY) board[playerX + addX + addX][playerY + addY + addY] = Field.OBJECT;
                 else board[playerX + addX + addX][playerY + addY + addY] = Field.OOT;
@@ -64,29 +67,36 @@ public class Model extends Observable {
             }
         }
 
-        checkSolved();
         setChanged();
         notifyObservers();
+        checkSolved();
     }
 
     public void checkSolved(){
         boolean solved = true;
         for(int x = 0; x < width; x++){
-            for(int y = 0; y < width; y++){
+            for(int y = 0; y < height; y++){
                 if(board[x][y] == Field.OBJECT) solved = false;
             }
         }
 
         if(solved){
             isRunning = false;
-            System.out.println("Gz you solved the puzzle :D");
+            JOptionPane.showMessageDialog(null, "You solved this puzzle!", "InfoBox", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
+    public void undo(){
+        if(isRunning) {
+            arrayCopy(previousBoard, board);
+            setChanged();
+            notifyObservers();
+        }
+    }
 
     public void loadMap(String mapName){
 
-        File file = new File(mapsDirectory + mapName + ".txt");
+        File file = new File(mapsDirectory + mapName);
         FileInputStream fileInputStream;
         try {
             fileInputStream = new FileInputStream(file);
@@ -121,6 +131,7 @@ public class Model extends Observable {
         }
 
         board = new Field[width][height];
+        previousBoard = new Field[width][height];
         Iterator<String> iterator = lines.iterator();
 
         for(int row = 0; row < height; row++){
@@ -162,6 +173,7 @@ public class Model extends Observable {
             }
         }
 
+        arrayCopy(board, previousBoard);
         isRunning = true;
         setChanged();
         notifyObservers();
@@ -171,6 +183,11 @@ public class Model extends Observable {
 
     }
 
+    public static void arrayCopy(Field[][] aSource, Field[][] aDestination) {
+        for (int i = 0; i < aSource.length; i++) {
+            System.arraycopy(aSource[i], 0, aDestination[i], 0, aSource[i].length);
+        }
+    }
 
     public Field getFieldByCoordinate(int col, int row){
         if(board[col][row] == null) return Field.EMPTY;

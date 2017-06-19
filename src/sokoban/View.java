@@ -16,7 +16,8 @@ public class View extends JInternalFrame implements Observer{
     JLabel[][] labelGrid;
     MoveAction moveUp, moveDown, moveRight, moveLeft;
 
-    int labelSize = 40;
+    int labelSize;
+    final int standardLabelSize = 40;
     boolean firstUpdate;
 
     public View(){
@@ -32,8 +33,13 @@ public class View extends JInternalFrame implements Observer{
     }
 
     private void initGrid(int cols, int rows){
+        labelSize = standardLabelSize;
         getContentPane().removeAll();
         setSize(cols * labelSize, (rows + 1) * labelSize);
+        while(getWidth() > getParent().getWidth() || getHeight() > getParent().getHeight()){
+            labelSize--;
+            setSize(cols * labelSize, (rows + 1) * labelSize);
+        }
         getContentPane().setLayout(new GridLayout(rows, cols));
         labelGrid = new JLabel[cols][rows];
 
@@ -41,7 +47,6 @@ public class View extends JInternalFrame implements Observer{
             for(int x = 0; x < cols; x++){
                 labelGrid[x][y] = new JLabel();
                 labelGrid[x][y].setVisible(true);
-                //labelGrid[x][y].setSize(labelSize, labelSize);
                 getContentPane().add(labelGrid[x][y]);
             }
         }
@@ -50,14 +55,30 @@ public class View extends JInternalFrame implements Observer{
     private JMenuBar initMenuBar(){
         JMenuBar menuBar = new JMenuBar();
         JMenu menuAdd = new JMenu("Map");
+        JMenu menuAction = new JMenu("Action");
         menuBar.add(menuAdd);
+        menuBar.add(menuAction);
 
-        JMenuItem menuItemStartTest = new JMenuItem("test Map");
-        menuItemStartTest.addActionListener(l -> {
-            firstUpdate = true;
-            model.loadMap("test");
+        File folder = new File("sokoban maps");
+        File[] listOfFiles = folder.listFiles();
+
+        for (int i = 0; i < listOfFiles.length; i++) {
+            if (listOfFiles[i].isFile()) {
+                String fileName = listOfFiles[i].getName();
+                JMenuItem menuItemMap = new JMenuItem(fileName.substring(0, fileName.indexOf('.')));
+                menuItemMap.addActionListener(l -> {
+                    firstUpdate = true;
+                    model.loadMap(fileName);
+                });
+                menuAdd.add(menuItemMap);
+            }
+        }
+
+        JMenuItem menuItemUndo = new JMenuItem("Undo");
+        menuItemUndo.addActionListener(l -> {
+            model.undo();
         });
-        menuAdd.add(menuItemStartTest);
+        menuAction.add(menuItemUndo);
 
         return menuBar;
     }
@@ -100,30 +121,29 @@ public class View extends JInternalFrame implements Observer{
 
         for(int y = 0; y < model.getHeight(); y++){
             for(int x = 0; x < model.getWidth(); x++){
-
                 JLabel label = labelGrid[x][y];
                 try {
                     switch (model.getFieldByCoordinate(x, y)) {
                         case WALL:
-                            label.setIcon(new ImageIcon(ImageIO.read(new File("src/sokoban/pictures/sokWall.png"))));
+                            label.setIcon(new ImageIcon(ImageIO.read(new File("src/sokoban/pictures/sokWall.png")).getScaledInstance(labelSize, labelSize, Image.SCALE_DEFAULT)));
                             break;
                         case EMPTY:
-                            label.setIcon(new ImageIcon(ImageIO.read(new File("src/sokoban/pictures/sokEmpty.png"))));
+                            label.setIcon(new ImageIcon(ImageIO.read(new File("src/sokoban/pictures/sokEmpty.png")).getScaledInstance(labelSize, labelSize, Image.SCALE_DEFAULT)));
                             break;
                         case PLAYER:
-                            label.setIcon(new ImageIcon(ImageIO.read(new File("src/sokoban/pictures/sokPlayer.png"))));
+                            label.setIcon(new ImageIcon(ImageIO.read(new File("src/sokoban/pictures/sokPlayer.png")).getScaledInstance(labelSize, labelSize, Image.SCALE_DEFAULT)));
                             break;
                         case TARGET:
-                            label.setIcon(new ImageIcon(ImageIO.read(new File("src/sokoban/pictures/sokTarget.png"))));
+                            label.setIcon(new ImageIcon(ImageIO.read(new File("src/sokoban/pictures/sokTarget.png")).getScaledInstance(labelSize, labelSize, Image.SCALE_DEFAULT)));
                             break;
                         case OBJECT:
-                            label.setIcon(new ImageIcon(ImageIO.read(new File("src/sokoban/pictures/sokObject.png"))));
+                            label.setIcon(new ImageIcon(ImageIO.read(new File("src/sokoban/pictures/sokObject.png")).getScaledInstance(labelSize, labelSize, Image.SCALE_DEFAULT)));
                             break;
                         case OOT:
-                            label.setIcon(new ImageIcon(ImageIO.read(new File("src/sokoban/pictures/sokOOT.png"))));
+                            label.setIcon(new ImageIcon(ImageIO.read(new File("src/sokoban/pictures/sokOOT.png")).getScaledInstance(labelSize, labelSize, Image.SCALE_DEFAULT)));
                             break;
                         case POT:
-                            label.setIcon(new ImageIcon(ImageIO.read(new File("src/sokoban/pictures/sokPOT.png"))));
+                            label.setIcon(new ImageIcon(ImageIO.read(new File("src/sokoban/pictures/sokPOT.png")).getScaledInstance(labelSize, labelSize, Image.SCALE_DEFAULT)));
                             break;
                         default:
                             label.setText("?");
