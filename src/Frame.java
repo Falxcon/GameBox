@@ -41,7 +41,7 @@ public class Frame extends JFrame {
         // dragsafe
         menuItemDragSafe = new JMenuItem("dragsafe");
         menuItemDragSafe.addActionListener(l -> {
-            desktopPane.add(new dragsafe.DragSafe(1000));
+            desktopPane.add(new dragsafe.DragSafe(1000, desktopPane));
         });
         menuAdd.add(menuItemDragSafe);
         // connect6
@@ -56,10 +56,10 @@ public class Frame extends JFrame {
             desktopPane.add(new elffarben.ElfFarben());
         });
         menuAdd.add(menuItemElfFarben);
-        // regenbogen
-        menuItemRegenbogen = new JMenuItem("regenbogen");
+        // rainbow
+        menuItemRegenbogen = new JMenuItem("rainbow");
         menuItemRegenbogen.addActionListener(l -> {
-            desktopPane.add(new regenbogen.Regenbogen());
+            desktopPane.add(new rainbow.IFrameBasic(desktopPane));
         });
         menuAdd.add(menuItemRegenbogen);
 

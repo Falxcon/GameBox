@@ -4,10 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
-import static com.sun.java.accessibility.util.AWTEventMonitor.addWindowListener;
 
 public class DragSafe extends JInternalFrame implements MouseMotionListener {
 
@@ -19,10 +15,12 @@ public class DragSafe extends JInternalFrame implements MouseMotionListener {
     private long rotationSpeed; // Zeit in ms bis zur nächsten Rotation
     private boolean dragStop; // Verhindert die mehrfache abtastung von mouseDragged
 
+    private JDesktopPane jDesktopPane;
     private Thread thread;
 
-    public DragSafe(long rotationSpeed) {
+    public DragSafe(long rotationSpeed, JDesktopPane jdp) {
         this.rotationSpeed = rotationSpeed;
+        jDesktopPane = jdp;
         dragStop = false;
         countPW = 0;
 
@@ -44,28 +42,32 @@ public class DragSafe extends JInternalFrame implements MouseMotionListener {
 
 
         // Erstellt thread zur Rotation der Buttons
-        thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (thread.isAlive()) {
-                    for (int i = 0; i <= 13; i++) {
-                        if (Thread.interrupted())
-                            return;
-                        if (rotation) {
-                            rotateR();
-                        } else {
-                            rotateL();
-                        }
-                        try {
-                            Thread.sleep(rotationSpeed);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
+        Runnable task = () -> {
+            while (Thread.currentThread().isAlive()) {
+                for (int i = 0; i <= 13; i++) {
+                    if (Thread.interrupted())
+                        return;
+                    if (rotation) {
+                        rotateR();
+                    } else {
+                        rotateL();
                     }
-                    changeRotation();
+                    try {
+                        Thread.sleep(rotationSpeed);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
+                changeRotation();
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    // Thread zerstört sich selbst
+                    return;
                 }
             }
-        });
+        };
+        thread = new Thread(task);
 
         setSize(500, 500);
         setTitle("DragSafe");
@@ -80,36 +82,35 @@ public class DragSafe extends JInternalFrame implements MouseMotionListener {
                 z++;
             }
         }
-        // Programm wird geschlossen beim schließen des Fensters
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                super.windowClosing(e);
-                System.exit(0);
-            }
-        });
-        setVisible(true); // Fenster wird sichtbar
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setVisible(true);
         thread.start();
     }
 
     public void mouseMoved(MouseEvent me) {
-        dragStop = false; // mouseDragged kann wieder abtasten
+        // mouseDragged kann wieder abtasten
+        dragStop = false;
     }
 
     public void mouseDragged(MouseEvent md) {
         if (!dragStop) {
             if (((AbstractButton) md.getSource()).getActionCommand().equals(Integer.toString(PASSWORD[countPW]))) {
-                countPW++; // Erhöht den Zähler bei einer richtigen Eingabe
+                // Erhöht den Zähler bei einer richtigen Eingabe
+                countPW++;
                 // Fenster wird geschlossen, wenn das passwort vollständig eingegeben wurde
                 if (countPW == PASSWORD.length) {
                     thread.interrupt();
                     dispose();
                 }
-                changeColorBtn(Color.GREEN); // Hintergrundfarbe der Buttons wird auf grün geändert
+                // Hintergrundfarbe der Buttons wird auf grün geändert
+                changeColorBtn(Color.GREEN);
             } else {
-                countPW = 0; // Setzt bei falscher Eingabe Zähler zurück
-                changeColorBtn(Color.RED); // Hintergrundfarbe der Buttons wird auf rot geändert
-                new DragSafe((long)(rotationSpeed * 0.5)); // Erstellt ei neues Fenster mit erhöter Rotationsgeschwindigkeit
+                // Setzt bei falscher Eingabe Zähler zurück
+                countPW = 0;
+                // Hintergrundfarbe der Buttons wird auf rot geändert
+                changeColorBtn(Color.RED);
+                // Erstellt ei neues Fenster mit erhöter Rotationsgeschwindigkeit
+                jDesktopPane.add(new DragSafe((long)(rotationSpeed * 0.5), jDesktopPane));
             }
             dragStop = true; // verhindert die mehrfache abtastung (Event wird nur einmal ausgeführt)
         }
