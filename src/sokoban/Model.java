@@ -14,7 +14,6 @@ public class Model extends Observable {
 
     int width, height, currentLvl;
     boolean isRunning;
-    String currentMap;
 
     final String mapsDirectory = "src/sokoban/maps/";
 
