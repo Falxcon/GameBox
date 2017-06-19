@@ -18,21 +18,21 @@ public class View extends JInternalFrame implements Observer{
 
     int labelSize;
     final int standardLabelSize = 40;
-    boolean firstUpdate;
 
     public View(){
-        model = new Model();
+        super("Sokoban", false, true);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+
+        model = new Model(this);
         model.addObserver(this);
         setJMenuBar(initMenuBar());
         setSize(400, 300);
         setVisible(true);
 
         initKeyBinds();
-
-        firstUpdate = true;
     }
 
-    private void initGrid(int cols, int rows){
+    public void initGrid(int cols, int rows){
         labelSize = standardLabelSize;
         getContentPane().removeAll();
         setSize(cols * labelSize, (rows + 1) * labelSize);
@@ -59,7 +59,7 @@ public class View extends JInternalFrame implements Observer{
         menuBar.add(menuAdd);
         menuBar.add(menuAction);
 
-        File folder = new File("sokoban maps");
+        File folder = new File("src/sokoban/maps");
         File[] listOfFiles = folder.listFiles();
 
         for (int i = 0; i < listOfFiles.length; i++) {
@@ -67,7 +67,6 @@ public class View extends JInternalFrame implements Observer{
                 String fileName = listOfFiles[i].getName();
                 JMenuItem menuItemMap = new JMenuItem(fileName.substring(0, fileName.indexOf('.')));
                 menuItemMap.addActionListener(l -> {
-                    firstUpdate = true;
                     model.loadMap(fileName);
                 });
                 menuAdd.add(menuItemMap);
@@ -79,6 +78,12 @@ public class View extends JInternalFrame implements Observer{
             model.undo();
         });
         menuAction.add(menuItemUndo);
+
+        JMenuItem menuItemRestart = new JMenuItem("Restart");
+        menuItemRestart.addActionListener(l -> {
+            model.restart();
+        });
+        menuAction.add(menuItemRestart);
 
         return menuBar;
     }
@@ -110,14 +115,8 @@ public class View extends JInternalFrame implements Observer{
         getActionMap().put("moveLeft", moveLeft);
     }
 
-
     @Override
     public void update(java.util.Observable o, Object arg) {
-
-        if(firstUpdate){
-            initGrid(model.getWidth(), model.getHeight());
-            firstUpdate = false;
-        }
 
         for(int y = 0; y < model.getHeight(); y++){
             for(int x = 0; x < model.getWidth(); x++){
@@ -152,7 +151,6 @@ public class View extends JInternalFrame implements Observer{
                 } catch (IOException e) {
                     System.out.println("picture not found");
                 }
-
 
             }
         }

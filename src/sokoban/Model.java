@@ -9,16 +9,20 @@ import java.util.*;
  */
 public class Model extends Observable {
 
-    Field[][] board, previousBoard;
+    Field[][] currentBoard, previousBoard;
+    List<Level> levels;
 
-    int width, height;
+    int width, height, currentLvl;
     boolean isRunning;
     String currentMap;
 
-    final String mapsDirectory = "sokoban maps/";
+    final String mapsDirectory = "src/sokoban/maps/";
 
+    View view;
 
-    Model(){
+    Model(View view){
+        this.view = view;
+        levels = new LinkedList<>();
         width = 0;
         height = 0;
         isRunning = false;
@@ -30,7 +34,7 @@ public class Model extends Observable {
         int playerX = -1, playerY = -1;
         for(int x = 0; x < width; x++){
             for(int y = 0; y < height; y++){
-                if(board[x][y] == Field.PLAYER || board[x][y] == Field.POT){
+                if(currentBoard[x][y] == Field.PLAYER || currentBoard[x][y] == Field.POT){
                     playerX = x;
                     playerY = y;
                     break;
@@ -39,31 +43,31 @@ public class Model extends Observable {
         }
 
         if(playerX == -1 || playerY == -1) return;
-        Field playerField = board[playerX][playerY];
-        Field nextField = board[playerX + addX][playerY + addY];
+        Field playerField = currentBoard[playerX][playerY];
+        Field nextField = currentBoard[playerX + addX][playerY + addY];
 
         if(nextField == Field.WALL) return;
 
         if(nextField == Field.EMPTY || nextField == Field.TARGET){
-            arrayCopy(board, previousBoard);
+            arrayCopy(currentBoard, previousBoard);
 
-            if(nextField == Field.EMPTY) board[playerX + addX][playerY + addY] = Field.PLAYER;
-            else board[playerX + addX][playerY + addY] = Field.POT;
-            if(playerField == Field.PLAYER) board[playerX][playerY] = Field.EMPTY;
-            else board[playerX][playerY] = Field.TARGET;
+            if(nextField == Field.EMPTY) currentBoard[playerX + addX][playerY + addY] = Field.PLAYER;
+            else currentBoard[playerX + addX][playerY + addY] = Field.POT;
+            if(playerField == Field.PLAYER) currentBoard[playerX][playerY] = Field.EMPTY;
+            else currentBoard[playerX][playerY] = Field.TARGET;
         }
         else if(nextField == Field.OBJECT || nextField == Field.OOT){
 
-            Field afterNextField = board[playerX + addX + addX][playerY + addY + addY];
+            Field afterNextField = currentBoard[playerX + addX + addX][playerY + addY + addY];
             if(afterNextField == Field.EMPTY || afterNextField == Field.TARGET){
-                arrayCopy(board, previousBoard);
+                arrayCopy(currentBoard, previousBoard);
 
-                if(afterNextField == Field.EMPTY) board[playerX + addX + addX][playerY + addY + addY] = Field.OBJECT;
-                else board[playerX + addX + addX][playerY + addY + addY] = Field.OOT;
-                if(nextField == Field.OBJECT) board[playerX + addX][playerY + addY] = Field.PLAYER;
-                else board[playerX + addX][playerY + addY] = Field.POT;
-                if(playerField == Field.PLAYER) board[playerX][playerY] = Field.EMPTY;
-                else board[playerX][playerY] = Field.TARGET;
+                if(afterNextField == Field.EMPTY) currentBoard[playerX + addX + addX][playerY + addY + addY] = Field.OBJECT;
+                else currentBoard[playerX + addX + addX][playerY + addY + addY] = Field.OOT;
+                if(nextField == Field.OBJECT) currentBoard[playerX + addX][playerY + addY] = Field.PLAYER;
+                else currentBoard[playerX + addX][playerY + addY] = Field.POT;
+                if(playerField == Field.PLAYER) currentBoard[playerX][playerY] = Field.EMPTY;
+                else currentBoard[playerX][playerY] = Field.TARGET;
             }
         }
 
@@ -76,25 +80,32 @@ public class Model extends Observable {
         boolean solved = true;
         for(int x = 0; x < width; x++){
             for(int y = 0; y < height; y++){
-                if(board[x][y] == Field.OBJECT) solved = false;
+                if(currentBoard[x][y] == Field.OBJECT) solved = false;
             }
         }
 
         if(solved){
             isRunning = false;
             JOptionPane.showMessageDialog(null, "You solved this puzzle!", "InfoBox", JOptionPane.INFORMATION_MESSAGE);
+            loadLevel(currentLvl + 1);
         }
     }
 
     public void undo(){
         if(isRunning) {
-            arrayCopy(previousBoard, board);
+            arrayCopy(previousBoard, currentBoard);
             setChanged();
             notifyObservers();
         }
     }
 
+    public void restart(){
+        loadLevel(currentLvl);
+    }
+
     public void loadMap(String mapName){
+
+        levels = new LinkedList<>();
 
         File file = new File(mapsDirectory + mapName);
         FileInputStream fileInputStream;
@@ -115,25 +126,73 @@ public class Model extends Observable {
             return;
         }
 
-        List<String> lines = new ArrayList<>();
-        width = inputLine.length();
-        height = 0;
+        while(inputLine != null) {
 
-        while(inputLine != null){
-            lines.add(inputLine);
-            height++;
-            if(inputLine.length() > width) width = inputLine.length();
+            List<String> lines = new ArrayList<>();
+            int number = 0;
+            String name = "";
+            int levelWidth = inputLine.length();
+            int levelHeight = 0;
+
+            while (inputLine != null && !inputLine.equals("")) {
+
+                if(inputLine.contains("Level")){
+                    number = Integer.parseInt(inputLine.substring(inputLine.indexOf(' ') + 1));
+                } else if(inputLine.contains("'")){
+                    name = inputLine.substring(1, inputLine.length() -1);
+                } else {
+                    lines.add(inputLine);
+                    levelHeight++;
+                    if (inputLine.length() > levelWidth) levelWidth = inputLine.length();
+                }
+
+                try {
+                    inputLine = fileInput.readLine();
+                } catch (IOException e) {
+                    break;
+                }
+            }
+
+            readLevel(name, number, levelWidth, levelHeight, lines);
+
             try {
                 inputLine = fileInput.readLine();
-            } catch (IOException e){
+            } catch (IOException e) {
                 break;
             }
         }
 
-        board = new Field[width][height];
-        previousBoard = new Field[width][height];
-        Iterator<String> iterator = lines.iterator();
+        loadLevel(1);
+    }
 
+    public void loadLevel(int number){
+        Level level;
+        try {
+            level = levels.get(number - 1);
+        } catch (Exception e){
+            System.out.println("no next level found");
+            return;
+        }
+
+        currentLvl = level.getNumber();
+        width = level.getWidth();
+        height = level.getHeight();
+        currentBoard = new Field[width][height];
+        previousBoard = new Field[width][height];
+        arrayCopy(level.getBoard(), currentBoard);
+        arrayCopy(level.getBoard(), previousBoard);
+
+        view.setTitle("Sokoban Level " + level.getNumber() + " " + level.getName());
+
+        isRunning = true;
+        view.initGrid(width, height);
+        setChanged();
+        notifyObservers();
+    }
+
+    private void readLevel(String name, int number, int width, int height, List<String> lines){
+        Iterator<String> iterator = lines.iterator();
+        Field[][] board = new Field[width][height];
         for(int row = 0; row < height; row++){
 
             String line = iterator.next();
@@ -173,10 +232,7 @@ public class Model extends Observable {
             }
         }
 
-        arrayCopy(board, previousBoard);
-        isRunning = true;
-        setChanged();
-        notifyObservers();
+        levels.add(new Level(name, number, width, height, board));
     }
 
     public void saveMap(String mapName){
@@ -190,8 +246,8 @@ public class Model extends Observable {
     }
 
     public Field getFieldByCoordinate(int col, int row){
-        if(board[col][row] == null) return Field.EMPTY;
-        else return board[col][row];
+        if(currentBoard[col][row] == null) return Field.EMPTY;
+        else return currentBoard[col][row];
     }
 
     public int getWidth() {
