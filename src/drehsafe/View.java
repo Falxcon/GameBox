@@ -84,7 +84,7 @@ public class View extends JInternalFrame implements ActionListener {
             }
             colorStatus = 1;
             step++;
-            if(step == combination.length) System.exit(0); //Programm beenden
+            if(step == combination.length) this.dispose(); //Programm beenden
         } else {
             for(Component c : pane.getComponents()){
                 c.setBackground(Color.RED);
