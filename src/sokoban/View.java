@@ -85,6 +85,12 @@ public class View extends JInternalFrame implements Observer{
         });
         menuAction.add(menuItemRestart);
 
+        JMenuItem menuItemPreviousLevel = new JMenuItem("Previous Level");
+        menuItemPreviousLevel.addActionListener(l -> {
+            model.previousLevel();
+        });
+        menuAction.add(menuItemPreviousLevel);
+
         return menuBar;
     }
 

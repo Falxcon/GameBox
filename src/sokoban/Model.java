@@ -102,6 +102,12 @@ public class Model extends Observable {
         loadLevel(currentLvl);
     }
 
+    public void previousLevel(){
+        if(currentLvl > 1) {
+            loadLevel(currentLvl - 1);
+        }
+    }
+
     public void loadMap(String mapName){
 
         levels = new LinkedList<>();

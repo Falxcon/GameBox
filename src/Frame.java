@@ -1,3 +1,4 @@
+
 import javax.swing.*;
 
 public class Frame extends JFrame {
@@ -6,7 +7,7 @@ public class Frame extends JFrame {
 
     private JMenu menuAdd;
 
-    private JMenuItem menuItemGOL, menuItemSokoban, menuItemDragSafe, menuItemConnect6, menuItemElfFarben, menuItemRegenbogen;
+    private JMenuItem menuItemGOL, menuItemSokoban, menuItemDragSafe, menuItemConnect6, menuItemElfFarben, menuItemRegenbogen, menuItemMVCexample;
 
     Frame() {
         setJMenuBar(initMenuBar());
@@ -62,6 +63,12 @@ public class Frame extends JFrame {
             desktopPane.add(new rainbow.IFrameBasic(desktopPane));
         });
         menuAdd.add(menuItemRegenbogen);
+        // mvcexample
+        menuItemMVCexample = new JMenuItem("mvc example");
+        menuItemMVCexample.addActionListener(l -> {
+            desktopPane.add(new mvcexample.MVCexample());
+        });
+        menuAdd.add(menuItemMVCexample);
 
         return menuBar;
     }
