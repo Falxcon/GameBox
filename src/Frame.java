@@ -7,7 +7,7 @@ public class Frame extends JFrame {
 
     private JMenu menuAdd;
 
-    private JMenuItem menuItemGOL, menuItemSokoban, menuItemDragSafe, menuItemConnect6, menuItemElfFarben, menuItemRegenbogen, menuItemMVCexample;
+    private JMenuItem menuItemGOL, menuItemSokoban, menuItemDragSafe, menuItemDrehSafe, menuItemConnect6, menuItemElfFarben, menuItemRegenbogen, menuItemMVCexample;
 
     Frame() {
         setJMenuBar(initMenuBar());
@@ -45,6 +45,12 @@ public class Frame extends JFrame {
             desktopPane.add(new dragsafe.DragSafe(1000, desktopPane));
         });
         menuAdd.add(menuItemDragSafe);
+        // drehsafe
+        menuItemDrehSafe = new JMenuItem("drehsafe");
+        menuItemDrehSafe.addActionListener(l -> {
+            desktopPane.add(new drehsafe.View());
+        });
+        menuAdd.add(menuItemDrehSafe);
         // connect6
         menuItemConnect6 = new JMenuItem("connect6");
         menuItemConnect6.addActionListener(l -> {

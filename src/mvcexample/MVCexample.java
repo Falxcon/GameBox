@@ -14,8 +14,9 @@ public class MVCexample extends JInternalFrame {        // Das GUI-Programm
     JSlider sa, sb, sc, sd;                // Controller
 
     public MVCexample(){
-        setTitle("MVC Example");
-        setSize(400, 500);
+        super("MVC Example", false, true);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setSize(400, 600);
         init();
         setVisible(true);
     }
