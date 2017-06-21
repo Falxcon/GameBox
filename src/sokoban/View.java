@@ -4,6 +4,8 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.Observer;
@@ -11,7 +13,7 @@ import java.util.Observer;
 /**
  * Created by tomwi on 29.05.2017.
  */
-public class View extends JInternalFrame implements Observer{
+public class View extends JInternalFrame implements Observer, MouseListener{
     Model model;
     JLabel[][] labelGrid;
     MoveAction moveUp, moveDown, moveRight, moveLeft;
@@ -29,7 +31,8 @@ public class View extends JInternalFrame implements Observer{
         setSize(400, 300);
         setVisible(true);
 
-        initKeyBinds();
+        initControls();
+        getContentPane().addMouseListener(this);
     }
 
     public void initGrid(int cols, int rows){
@@ -112,6 +115,56 @@ public class View extends JInternalFrame implements Observer{
         return menuBar;
     }
 
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if(labelSize == 0) return;
+        int clickPosX = e.getX() / labelSize;
+        int clickPosY = e.getY() / labelSize;
+        int playerX = 0;
+        int playerY = 0;
+
+        if(clickPosX < model.getWidth() && clickPosY < model.getHeight()){
+            for(int x = 0; x < model.getWidth(); x++){
+                for(int y = 0; y < model.getHeight(); y++){
+                    if(model.getFieldByCoordinate(x, y) == Field.PLAYER || model.getFieldByCoordinate(x, y) == Field.POT){
+                        playerX = x;
+                        playerY = y;
+                        break;
+                    }
+                }
+            }
+        }
+
+        int difX = clickPosX - playerX;
+        int difY = clickPosY - playerY;
+
+        System.out.println(difX + " " + difY);
+
+        if((difX == 0 || difY == 0) && (difX == 1 || difX == -1 || difY == 1 || difY == -1)){
+            model.movePlayer(difX, difY);
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
+
     class MoveAction extends AbstractAction {
         int dx, dy;
         MoveAction(int dx, int dy){
@@ -124,7 +177,7 @@ public class View extends JInternalFrame implements Observer{
         }
     }
 
-    private void initKeyBinds(){
+    private void initControls(){
         moveUp = new MoveAction(0, -1);
         moveDown = new MoveAction(0, 1);
         moveRight = new MoveAction(1, 0);

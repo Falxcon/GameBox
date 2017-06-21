@@ -250,7 +250,7 @@ public class Model extends Observable {
         File[] listOfFiles = folder.listFiles();
         String[] fileNames = new String[listOfFiles.length];
         for(int i = 0; i < fileNames.length; i++){
-            fileNames[i] = listOfFiles[i].getName();
+            fileNames[i] = listOfFiles[i].getName().substring(0, listOfFiles[i].getName().indexOf('.'));
         }
 
         String picked = (String)JOptionPane.showInputDialog(view, "Pick Saved Game:"
@@ -260,7 +260,7 @@ public class Model extends Observable {
         ObjectInputStream inputStream;
         Game game;
         try {
-            inputStream = new ObjectInputStream(new FileInputStream("Saved Games/" + picked));
+            inputStream = new ObjectInputStream(new FileInputStream("Saved Games/" + picked + ".ser"));
             game = (Game)inputStream.readObject();
         } catch (Exception e){
             return;
@@ -269,46 +269,6 @@ public class Model extends Observable {
         levels = game.levels;
         currentLvl = game.currentLevel;
         loadLevel(currentLvl);
-
-        /*
-        List<Game> games = new LinkedList<>();
-        try{
-            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("saved_games.ser"));
-
-            while(true){
-                Game game = (Game)inputStream.readObject();
-                if(game == null) break;
-                System.out.println(game);
-                games.add(game);
-            }
-        } catch (Exception e){
-            System.out.println(e);
-            return;
-        }
-
-        if(games.size() == 0){
-            System.out.println("no games found");
-            return;
-        }
-        String[] gameNames = new String[games.size()];
-        Iterator iterator = games.iterator();
-
-        for(int i = 0; i < gameNames.length; i++){
-            gameNames[i] =  iterator.next().toString();
-        }
-
-        String picked = (String)JOptionPane.showInputDialog(view, "Pick Saved Game:"
-                , "Load Game", JOptionPane.QUESTION_MESSAGE
-                , null, gameNames, gameNames[0]);
-
-        for(Game g : games){
-            if(g.name.equals(picked)){
-                levels = g.levels;
-                currentLvl = g.currentLevel;
-                loadLevel(currentLvl);
-            }
-        }
-        */
     }
 
     public void saveGame(){
