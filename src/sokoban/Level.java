@@ -5,6 +5,8 @@ import java.io.Serializable;
 /**
  * Created by tomwi on 19.06.2017.
  */
+
+//enthält alle Informationen über ein Level
 public class Level implements Serializable{
 
     Field[][] board;

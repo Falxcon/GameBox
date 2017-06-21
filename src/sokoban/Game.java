@@ -6,6 +6,8 @@ import java.util.List;
 /**
  * Created by tomwi on 21.06.2017.
  */
+
+//ein Objekt dieser Klasse enthält alle zum Speichern notwendigen Informaionen
 public class Game implements Serializable{
     List<Level> levels;
     int currentLevel;
