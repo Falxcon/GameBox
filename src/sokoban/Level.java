@@ -1,9 +1,11 @@
 package sokoban;
 
+import java.io.Serializable;
+
 /**
  * Created by tomwi on 19.06.2017.
  */
-public class Level {
+public class Level implements Serializable{
 
     Field[][] board;
     String name;

@@ -91,6 +91,24 @@ public class View extends JInternalFrame implements Observer{
         });
         menuAction.add(menuItemPreviousLevel);
 
+        JMenuItem menuItemNextLevel = new JMenuItem("Next Level");
+        menuItemNextLevel.addActionListener(l -> {
+            model.nextLevel();
+        });
+        menuAction.add(menuItemNextLevel);
+
+        JMenuItem menuItemSaveGame = new JMenuItem("Save");
+        menuItemSaveGame.addActionListener(l -> {
+            model.saveGame();
+        });
+        menuAction.add(menuItemSaveGame);
+
+        JMenuItem menuItemLoadGame = new JMenuItem("Load");
+        menuItemLoadGame.addActionListener(l -> {
+            model.loadGame("test");
+        });
+        menuAction.add(menuItemLoadGame);
+
         return menuBar;
     }
 

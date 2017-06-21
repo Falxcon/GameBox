@@ -108,6 +108,10 @@ public class Model extends Observable {
         }
     }
 
+    public void nextLevel(){
+        loadLevel(currentLvl + 1);
+    }
+
     public void loadMap(String mapName){
 
         levels = new LinkedList<>();
@@ -240,8 +244,37 @@ public class Model extends Observable {
         levels.add(new Level(name, number, width, height, board));
     }
 
-    public void saveMap(String mapName){
+    public void loadGame(String gameName){
+        try {
+            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("saved_games.ser"));
+            while(true){
+                Game game = (Game)inputStream.readObject();
+                if(game == null) break;
+                System.out.println(game.name);
+                if(game.name.equals(gameName)){
+                    levels = game.levels;
+                    currentLvl = game.currentLevel;
+                    loadLevel(currentLvl);
+                    break;
+                }
+            }
+        } catch (Exception e){
+            System.out.println(e);
+            return;
+        }
+    }
 
+    public void saveGame(){
+        try {
+            ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("saved_games.ser"));
+            Level level = new Level(levels.get(currentLvl - 1).name, currentLvl, width, height, currentBoard);
+            List<Level> saveLevels = levels;
+            saveLevels.set(currentLvl - 1, level);
+            os.writeObject(new Game("test", currentLvl, saveLevels));
+            os.close();
+        } catch (Exception e){
+            System.out.println(e);
+        }
     }
 
     public static void arrayCopy(Field[][] aSource, Field[][] aDestination) {
