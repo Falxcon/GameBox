@@ -4,6 +4,11 @@ import javax.swing.*;
 import java.io.*;
 import java.util.*;
 
+/**
+ * Created by tomwi on 29.05.2017.
+ */
+
+//enthält Spieldaten und Methoden zum Spieles von Sokoban
 public class Model extends Observable {
 
     Field[][] currentBoard, previousBoard;
@@ -24,9 +29,11 @@ public class Model extends Observable {
         isRunning = false;
     }
 
+    //bewegt falls möglich den Spieler auf der Spielfläche und schiebt ggf Objekte
     public void movePlayer(int addX, int addY){
         if(!isRunning) return;
 
+        //Position des Spielers ermitteln
         int playerX = -1, playerY = -1;
         for(int x = 0; x < width; x++){
             for(int y = 0; y < height; y++){
@@ -39,13 +46,16 @@ public class Model extends Observable {
         }
 
         if(playerX == -1 || playerY == -1) return;
+
         Field playerField = currentBoard[playerX][playerY];
         Field nextField = currentBoard[playerX + addX][playerY + addY];
 
+        //Regeln für das Bewegen der Spielfigur
         if(nextField == Field.WALL) return;
 
         if(nextField == Field.EMPTY || nextField == Field.TARGET){
-            arrayCopy(currentBoard, previousBoard);
+            //Spielfigur geht auf ein freies Feld
+            fieldArrayCopy(currentBoard, previousBoard);
 
             if(nextField == Field.EMPTY) currentBoard[playerX + addX][playerY + addY] = Field.PLAYER;
             else currentBoard[playerX + addX][playerY + addY] = Field.POT;
@@ -56,7 +66,8 @@ public class Model extends Observable {
 
             Field afterNextField = currentBoard[playerX + addX + addX][playerY + addY + addY];
             if(afterNextField == Field.EMPTY || afterNextField == Field.TARGET){
-                arrayCopy(currentBoard, previousBoard);
+                //Spielfigur schiebt ein Objekt
+                fieldArrayCopy(currentBoard, previousBoard);
 
                 if(afterNextField == Field.EMPTY) currentBoard[playerX + addX + addX][playerY + addY + addY] = Field.OBJECT;
                 else currentBoard[playerX + addX + addX][playerY + addY + addY] = Field.OOT;
@@ -72,6 +83,7 @@ public class Model extends Observable {
         checkSolved();
     }
 
+    //überprüft ob das Rätsel gelöst ist
     public void checkSolved(){
         boolean solved = true;
         for(int x = 0; x < width; x++){
@@ -87,29 +99,34 @@ public class Model extends Observable {
         }
     }
 
+    //Setzt den Zustand des Spiels eine Aktion zurück
     public void undo(){
         if(isRunning) {
-            arrayCopy(previousBoard, currentBoard);
+            fieldArrayCopy(previousBoard, currentBoard);
             setChanged();
             notifyObservers();
         }
     }
 
+    //Startet das aktuelle Level neu
     public void restart(){
         loadLevel(currentLvl);
     }
 
+    //springt ein Level zurück
     public void previousLevel(){
         if(currentLvl > 1) {
             loadLevel(currentLvl - 1);
         }
     }
 
+    //springt zum nächsten Level
     public void nextLevel(){
         loadLevel(currentLvl + 1);
     }
 
-    public void loadMap(String mapName){
+    //liest eine Textdatei und erstellt für jedes Level ein 2D Array aus Field-Objekten
+    public void readMap(String mapName){
 
         levels = new LinkedList<>();
 
@@ -132,21 +149,26 @@ public class Model extends Observable {
             return;
         }
 
+        //Schleife für die gesamte txt-Datei
         while(inputLine != null) {
 
-            List<String> lines = new ArrayList<>();
+            List<String> lines = new ArrayList<>(); //enthält nach der inneren Schleife alle Zeilen mit Feldinformationen
             int number = 0;
             String name = "";
             int levelWidth = inputLine.length();
             int levelHeight = 0;
 
+            //Schleife für einen Level-Teil der txt-Datei
             while (inputLine != null && !inputLine.equals("")) {
 
                 if(inputLine.contains("Level")){
+                    //inputLine ist Zeile mit Levelnummer
                     number = Integer.parseInt(inputLine.substring(inputLine.indexOf(' ') + 1));
                 } else if(inputLine.contains("'")){
+                    //inputLine ist Zeile mit Levelname (optional)
                     name = inputLine.substring(1, inputLine.length() -1);
                 } else {
+                    //inputLine ist Zeile mit Feldinformation
                     lines.add(inputLine);
                     levelHeight++;
                     if (inputLine.length() > levelWidth) levelWidth = inputLine.length();
@@ -159,8 +181,10 @@ public class Model extends Observable {
                 }
             }
 
+            //Levelobjekt erstellen
             readLevel(name, number, levelWidth, levelHeight, lines);
 
+            //nächste Zeile laden
             try {
                 inputLine = fileInput.readLine();
             } catch (IOException e) {
@@ -171,31 +195,7 @@ public class Model extends Observable {
         loadLevel(1);
     }
 
-    public void loadLevel(int number){
-        Level level;
-        try {
-            level = levels.get(number - 1);
-        } catch (Exception e){
-            System.out.println("no next level found");
-            return;
-        }
-
-        currentLvl = level.getNumber();
-        width = level.getWidth();
-        height = level.getHeight();
-        currentBoard = new Field[width][height];
-        previousBoard = new Field[width][height];
-        arrayCopy(level.getBoard(), currentBoard);
-        arrayCopy(level.getBoard(), previousBoard);
-
-        view.setTitle("Sokoban Level " + level.getNumber() + " " + level.getName());
-
-        isRunning = true;
-        view.initGrid(width, height);
-        setChanged();
-        notifyObservers();
-    }
-
+    //erstellt ein Level-Objekt aus einer Liste mit Strings und fügt dieses zur levels-Liste hinzu
     private void readLevel(String name, int number, int width, int height, List<String> lines){
         Iterator<String> iterator = lines.iterator();
         Field[][] board = new Field[width][height];
@@ -241,8 +241,36 @@ public class Model extends Observable {
         levels.add(new Level(name, number, width, height, board));
     }
 
+    //lädt das Level mit der übergebenen nummer und lässt es anzeigen
+    public void loadLevel(int number){
+        Level level;
+        try {
+            level = levels.get(number - 1);
+        } catch (Exception e){
+            //System.out.println("no next level found");
+            return;
+        }
+
+        currentLvl = level.getNumber();
+        width = level.getWidth();
+        height = level.getHeight();
+        currentBoard = new Field[width][height];
+        previousBoard = new Field[width][height];
+        fieldArrayCopy(level.getBoard(), currentBoard);
+        fieldArrayCopy(level.getBoard(), previousBoard);
+
+        view.setTitle("Sokoban Level " + level.getNumber() + " " + level.getName());
+
+        isRunning = true;
+        view.initGrid(width, height);
+        setChanged();
+        notifyObservers();
+    }
+
+    //lädt den Spielstand, den der Spieler auswählt
     public void loadGame(){
 
+        //alle Dateinamen im Saved Games Ordner sammeln
         File folder = new File("Saved Games");
         File[] listOfFiles = folder.listFiles();
         String[] fileNames = new String[listOfFiles.length];
@@ -268,6 +296,7 @@ public class Model extends Observable {
         loadLevel(currentLvl);
     }
 
+    //Speichert die aktuelle Level-Sammlung in einem Game-Objekt mit dem vom Spieler ausgewählten Namen
     public void saveGame(){
         try {
             Level level = new Level(levels.get(currentLvl - 1).name, currentLvl, width, height, currentBoard);
@@ -282,12 +311,14 @@ public class Model extends Observable {
         }
     }
 
-    public static void arrayCopy(Field[][] aSource, Field[][] aDestination) {
+    //kopiert ein 2D Field-Array
+    public static void fieldArrayCopy(Field[][] aSource, Field[][] aDestination) {
         for (int i = 0; i < aSource.length; i++) {
             System.arraycopy(aSource[i], 0, aDestination[i], 0, aSource[i].length);
         }
     }
 
+    //gibt das Feld an der angegebenen Position zurück
     public Field getFieldByCoordinate(int col, int row){
         if(currentBoard[col][row] == null) return Field.EMPTY;
         else return currentBoard[col][row];
