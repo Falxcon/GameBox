@@ -244,33 +244,81 @@ public class Model extends Observable {
         levels.add(new Level(name, number, width, height, board));
     }
 
-    public void loadGame(String gameName){
+    public void loadGame(){
+
+        File folder = new File("Saved Games");
+        File[] listOfFiles = folder.listFiles();
+        String[] fileNames = new String[listOfFiles.length];
+        for(int i = 0; i < fileNames.length; i++){
+            fileNames[i] = listOfFiles[i].getName();
+        }
+
+        String picked = (String)JOptionPane.showInputDialog(view, "Pick Saved Game:"
+                , "Load Game", JOptionPane.QUESTION_MESSAGE
+                , null, fileNames, fileNames[0]);
+
+        ObjectInputStream inputStream;
+        Game game;
         try {
+            inputStream = new ObjectInputStream(new FileInputStream("Saved Games/" + picked));
+            game = (Game)inputStream.readObject();
+        } catch (Exception e){
+            return;
+        }
+
+        levels = game.levels;
+        currentLvl = game.currentLevel;
+        loadLevel(currentLvl);
+
+        /*
+        List<Game> games = new LinkedList<>();
+        try{
             ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("saved_games.ser"));
+
             while(true){
                 Game game = (Game)inputStream.readObject();
                 if(game == null) break;
-                System.out.println(game.name);
-                if(game.name.equals(gameName)){
-                    levels = game.levels;
-                    currentLvl = game.currentLevel;
-                    loadLevel(currentLvl);
-                    break;
-                }
+                System.out.println(game);
+                games.add(game);
             }
         } catch (Exception e){
             System.out.println(e);
             return;
         }
+
+        if(games.size() == 0){
+            System.out.println("no games found");
+            return;
+        }
+        String[] gameNames = new String[games.size()];
+        Iterator iterator = games.iterator();
+
+        for(int i = 0; i < gameNames.length; i++){
+            gameNames[i] =  iterator.next().toString();
+        }
+
+        String picked = (String)JOptionPane.showInputDialog(view, "Pick Saved Game:"
+                , "Load Game", JOptionPane.QUESTION_MESSAGE
+                , null, gameNames, gameNames[0]);
+
+        for(Game g : games){
+            if(g.name.equals(picked)){
+                levels = g.levels;
+                currentLvl = g.currentLevel;
+                loadLevel(currentLvl);
+            }
+        }
+        */
     }
 
     public void saveGame(){
         try {
-            ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("saved_games.ser"));
             Level level = new Level(levels.get(currentLvl - 1).name, currentLvl, width, height, currentBoard);
             List<Level> saveLevels = levels;
             saveLevels.set(currentLvl - 1, level);
-            os.writeObject(new Game("test", currentLvl, saveLevels));
+            String input = JOptionPane.showInputDialog("Enter the name of the saved Game", level.name);
+            ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("Saved Games/" + input + ".ser"));
+            os.writeObject(new Game(input, currentLvl, saveLevels));
             os.close();
         } catch (Exception e){
             System.out.println(e);

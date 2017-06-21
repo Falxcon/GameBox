@@ -105,7 +105,7 @@ public class View extends JInternalFrame implements Observer{
 
         JMenuItem menuItemLoadGame = new JMenuItem("Load");
         menuItemLoadGame.addActionListener(l -> {
-            model.loadGame("test");
+            model.loadGame();
         });
         menuAction.add(menuItemLoadGame);
 
