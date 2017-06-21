@@ -54,7 +54,7 @@ public class Frame extends JFrame {
         // connect6
         menuItemConnect6 = new JMenuItem("connect6");
         menuItemConnect6.addActionListener(l -> {
-            desktopPane.add(new connect6.Connect6(19));
+            desktopPane.add(new connect6.Connect6(19, desktopPane));
         });
         menuAdd.add(menuItemConnect6);
         // elffarben

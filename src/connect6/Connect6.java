@@ -4,16 +4,17 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class Connect6 extends JInternalFrame {
 
     Connect6MenuBar menuBar;
     Connect6Panel panel;
+    JDesktopPane jDesktopPane;
 
-    public Connect6(int size) {
+    public Connect6(int size, JDesktopPane jdp) {
         super("Connect6", false, true);
+        jDesktopPane = jdp;
+
         setSize(600, 600);
         setTitle("Connect6");
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -26,47 +27,26 @@ public class Connect6 extends JInternalFrame {
         setVisible(true);
     }
 
-    public static void main(String[] args) {
-        new Connect6(19);
-    }
-
     /**
      *
      */
-    public class Connect6MenuBar extends JMenuBar implements ActionListener {
+    public class Connect6MenuBar extends JMenuBar {
 
-        JMenuItem newGame, newWindow, close;
+        JMenuItem newGame;
 
         public Connect6MenuBar() {
             newGame = new JMenuItem("New Game");
-            newGame.addActionListener(this);
+            newGame.addActionListener(l -> {
+                jDesktopPane.add(new Connect6Slider());
+            });
             add(newGame);
-
-            newWindow = new JMenuItem("New Window");
-            newWindow.addActionListener(this);
-            add(newWindow);
-
-            close = new JMenuItem("Close Program");
-            close.addActionListener(this);
-            add(close);
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == newGame) {
-                new Connect6Slider();
-            } else if (e.getSource() == newWindow) {
-                new Connect6(19);
-            } else if (e.getSource() == close) {
-                System.exit(0);
-            }
         }
     }
 
     /**
      *
      */
-    public class Connect6Slider extends JFrame implements ActionListener, ChangeListener {
+    public class Connect6Slider extends JInternalFrame implements ChangeListener {
 
         JButton ok, cancel;
         JSlider slider;
@@ -74,9 +54,14 @@ public class Connect6 extends JInternalFrame {
         public Connect6Slider() {
             setLayout(new FlowLayout());
             ok = new JButton("OK");
-            ok.addActionListener(this);
+            ok.addActionListener(l -> {
+                panel.resetPanel(slider.getValue());
+                dispose();
+            });
             cancel = new JButton("CANCEL");
-            cancel.addActionListener(this);
+            cancel.addActionListener(l -> {
+                dispose();
+            });
             slider = new JSlider(SwingConstants.HORIZONTAL, 6, 59, 19);
             setSize(1000, 200);
             setTitle("Connect6Menu");
@@ -91,18 +76,7 @@ public class Connect6 extends JInternalFrame {
             add(slider);
             add(ok);
             add(cancel);
-            setLocationRelativeTo(null);
             setVisible(true);
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == ok) {
-                panel.resetPanel(slider.getValue());
-                dispose();
-            } else if (e.getSource() == cancel) {
-                dispose();
-            }
         }
 
         @Override

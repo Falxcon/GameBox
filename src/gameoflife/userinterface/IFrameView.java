@@ -20,7 +20,6 @@ public class IFrameView extends IFrameBasic {
     private void initComponents() {
         menuBar = new MenuBar();
         menuBar.addMenuCell(gridPanelBasic, this);
-        menuBar.addMenuRotate(gridPanelBasic, this);
 
         add(gridPanelBasic);
         setJMenuBar(menuBar);

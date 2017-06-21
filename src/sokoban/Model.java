@@ -4,9 +4,6 @@ import javax.swing.*;
 import java.io.*;
 import java.util.*;
 
-/**
- * Created by tomwi on 29.05.2017.
- */
 public class Model extends Observable {
 
     Field[][] currentBoard, previousBoard;

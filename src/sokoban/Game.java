@@ -3,9 +3,6 @@ package sokoban;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * Created by tomwi on 21.06.2017.
- */
 public class Game implements Serializable{
     List<Level> levels;
     int currentLevel;

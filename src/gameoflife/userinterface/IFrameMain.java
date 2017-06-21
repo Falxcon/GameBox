@@ -39,7 +39,6 @@ public class IFrameMain extends IFrameBasic {
         menuBar.addMenuForm(simulation);
         menuBar.addMenuWindow(simulation, jDesktopPane);
         menuBar.addMenuCell(gridPanelMain, this);
-        menuBar.addMenuRotate(gridPanelMain, this);
 
         add(gridPanelMain);
         setJMenuBar(menuBar);
