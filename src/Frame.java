@@ -1,4 +1,3 @@
-
 import javax.swing.*;
 
 public class Frame extends JFrame {
@@ -7,7 +6,8 @@ public class Frame extends JFrame {
 
     private JMenu menuAdd;
 
-    private JMenuItem menuItemGOL, menuItemSokoban, menuItemDragSafe, menuItemDrehSafe, menuItemConnect6, menuItemElfFarben, menuItemRegenbogen, menuItemMVCexample;
+    private JMenuItem menuItemGOL, menuItemSokoban, menuItemDragSafe, menuItemDrehSafe,
+            menuItemConnect6, menuItemElfFarben, menuItemRegenbogen, menuItemMVCexample, menuItemPrim;
 
     Frame() {
         setJMenuBar(initMenuBar());
@@ -75,6 +75,12 @@ public class Frame extends JFrame {
             desktopPane.add(new mvcexample.MVCexample());
         });
         menuAdd.add(menuItemMVCexample);
+
+        menuItemPrim = new JMenuItem("Primzahlen");
+        menuItemPrim.addActionListener(l -> {
+            desktopPane.add(new siebenspaltenprimzahlen.Jiframe());
+        });
+        menuAdd.add(menuItemPrim);
 
         return menuBar;
     }
