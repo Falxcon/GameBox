@@ -4,9 +4,9 @@ import javax.swing.*;
 import java.io.*;
 import java.util.*;
 
-/**
- * Created by tomwi on 29.05.2017.
- */
+/*
+* @author Tom Wittal
+* */
 
 //enthält Spieldaten und Methoden zum Spieles von Sokoban
 public class Model extends Observable {

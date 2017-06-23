@@ -1,5 +1,9 @@
 package connect6;
 
+/*
+* @author Valentin Lutz
+* */
+
 public class Connect6Board {
 
     static final int NONE  = 0;

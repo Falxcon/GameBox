@@ -1,6 +1,9 @@
 package gameoflife.userinterface;
 
 import javax.swing.*;
+/*
+* @author Valentin Lutz
+* */
 
 public class IFrameBasic extends JInternalFrame {
 

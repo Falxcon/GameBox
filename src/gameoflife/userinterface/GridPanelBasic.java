@@ -9,6 +9,10 @@ import java.awt.event.MouseEvent;
 import java.util.Observable;
 import java.util.Observer;
 
+/*
+* @author Valentin Lutz
+* */
+
 public class GridPanelBasic extends JPanel implements Observer {
 
     protected int cellSize;

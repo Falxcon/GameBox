@@ -6,6 +6,10 @@ import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+/*
+* @author Valentin Lutz
+* */
+
 public class GridPanelMain extends GridPanelBasic {
 
     private boolean draw;

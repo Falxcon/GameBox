@@ -2,6 +2,11 @@ package gameoflife.model;
 
 import java.util.*;
 
+/*
+* @author Valentin Lutz
+* */
+
+
 public class Simulation extends Observable {
 
     private boolean[][] grid;

@@ -3,6 +3,10 @@ package elffarben;
 import javax.swing.*;
 import java.awt.*;
 
+/*
+* @author Sebastian Glück
+* */
+
 public class ElfFarben extends JInternalFrame {
     // buttonlabel
     static String colors[] = {"Black", "Blue", "Cyan", "Gray", "Green", "Magenta", "Orange", "Pink", "Red", "White", "Yellow"};

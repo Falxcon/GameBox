@@ -1,8 +1,8 @@
 package mvcexample;
 
-/**
- * Created by tomwi on 20.06.2017.
- */
+/*
+* @author Tom Wittal, Sebastian Glück, Valentin Lutz
+* */
 import java.util.Observable;
 
 class Qpolynom extends Observable {

@@ -1,8 +1,9 @@
 package siebenspaltenprimzahlen;
 
-/**
- * Created by tomwi on 23.06.2017.
- */
+
+/*
+* @author Sebastian Glück
+* */
 import javax.swing.*;
 import java.awt.*;
 
@@ -21,10 +22,10 @@ public class Primer extends Thread{
         textArea = view.textArea;
         this.start();
     }
-
+        //Methode zum Aussieben der Primzahlen
     public void run(){
         String line = Integer.toString(p);
-        for(int i = 0; i < 7; i++){
+        for(int i = 0; i < 7; i++){//Schleife zum Einfügen der Leerzeichen
             if(i == r) textArea[i].append(line + "\n");
             else textArea[i].append("\n");
         }

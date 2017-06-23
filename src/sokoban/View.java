@@ -11,9 +11,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Observer;
 
-/**
- * Created by tomwi on 29.05.2017.
- */
+/*
+* @author Tom Wittal
+* */
 
 //zuständig für Anzeigen und Eingabe
 public class View extends JInternalFrame implements Observer, MouseListener{

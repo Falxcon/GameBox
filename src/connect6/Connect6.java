@@ -5,6 +5,10 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 
+/*
+* @author Valentin Lutz
+* */
+
 public class Connect6 extends JInternalFrame {
 
     Connect6MenuBar menuBar;

@@ -3,9 +3,9 @@ package sokoban;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * Created by tomwi on 21.06.2017.
- */
+/*
+* @author Tom Wittal
+* */
 
 //ein Objekt dieser Klasse enthält alle zum Speichern notwendigen Informaionen
 public class Game implements Serializable{

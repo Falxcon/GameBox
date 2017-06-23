@@ -2,6 +2,9 @@ package rainbow;
 
 import javax.swing.*;
 import java.awt.*;
+/*
+* @author Tom Wittal, Sebastian Glück, Valentin Lutz
+* */
 
 public class IFrameRainbow extends JInternalFrame{
 

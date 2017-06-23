@@ -4,6 +4,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+/*
+* @author Tom Wittal, Sebastian Glück, Valentin Lutz
+* */
+
+
 
 public class DragSafe extends JInternalFrame implements MouseMotionListener {
 

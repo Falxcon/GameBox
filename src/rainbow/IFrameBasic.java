@@ -2,6 +2,10 @@ package rainbow;
 
 import javax.swing.*;
 
+/*
+* @author Tom Wittal, Sebastian Glück, Valentin Lutz
+* */
+
 public class IFrameBasic extends JInternalFrame{
 
     JButton bNewWindow;
@@ -20,7 +24,7 @@ public class IFrameBasic extends JInternalFrame{
         setVisible(true);
     }
 
-    private void initButton() {
+    private void initButton() {//Methode zum Starten eines neuen Regenbogen Fensters
         bNewWindow = new JButton("Neues Fenster");
         bNewWindow.addActionListener(l -> {
             jDesktopPane.add(new IFrameRainbow());

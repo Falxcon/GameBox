@@ -1,6 +1,9 @@
 package gameoflife.userinterface;
 
 import gameoflife.model.Simulation;
+/*
+* @author Valentin Lutz
+* */
 
 public class IFrameView extends IFrameBasic {
 

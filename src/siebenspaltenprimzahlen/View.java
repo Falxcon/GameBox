@@ -5,16 +5,17 @@ import java.awt.*;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 
-/**
- * Created by tomwi on 23.06.2017.
- */
+
+/*
+* @author Sebastian Glück
+* */
 public class View extends JInternalFrame{
     JTextArea[] textArea;
     JScrollPane scrollPane;
     AdjustmentListener adjustmentListener;
 
     public View(){
-        super("SiebenSpaltenPrimzahlen",true,true);
+        super("SiebenSpaltenPrimzahlen",true,true);//Konstruktor des JInternalFrame
         init();
     }
 
@@ -33,7 +34,7 @@ public class View extends JInternalFrame{
             pane.add(area);
         }
         scrollPane = new JScrollPane(pane);
-        adjustmentListener = new AdjustmentListener() {
+        adjustmentListener = new AdjustmentListener() {//Funktion zum automatischen ans Ende scrollen
             public void adjustmentValueChanged(AdjustmentEvent e) {
                 e.getAdjustable().setValue(e.getAdjustable().getMaximum());
             }
@@ -48,5 +49,5 @@ public class View extends JInternalFrame{
 
     public void finished(){
         scrollPane.getVerticalScrollBar().removeAdjustmentListener(adjustmentListener);
-    }
+    }//Methode die das ans Ende scrollen beendet
 }

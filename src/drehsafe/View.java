@@ -1,8 +1,8 @@
 package drehsafe;
 
-/**
- * Created by tomwi on 20.06.2017.
- */
+/*
+* @author Sebastian Glück
+* */
 import java.awt.*;
 import java.awt.event.*;
 import java.util.concurrent.*;

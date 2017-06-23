@@ -3,6 +3,9 @@ package gameoflife.userinterface;
 import gameoflife.model.Simulation;
 
 import javax.swing.*;
+/*
+* @author Valentin Lutz
+* */
 
 public class IFrameMain extends IFrameBasic {
 
