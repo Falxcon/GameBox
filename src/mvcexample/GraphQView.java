@@ -8,10 +8,6 @@ import java.awt.*;
 import java.util.Observable;
 import java.util.Observer;
 
-/**
- * Das ist ein View fuer graphische Darstellung eines Kubischen Polynoms
- */
-
 class GraphQView extends JPanel implements Observer {
     Qpolynom myPolynom;
     int points = 2000;
@@ -21,9 +17,9 @@ class GraphQView extends JPanel implements Observer {
         myPolynom = q;
     }
     public void paintComponent(Graphics g) {
-        super.paintComponent(g); // in Superklasse aufrufen ...
-        int maxWidth = getWidth(); // Weite bestimmen
-        int maxHeight = getHeight(); // Hoehe Bestimmen
+        super.paintComponent(g);
+        int maxWidth = getWidth();
+        int maxHeight = getHeight();
         double hstep = (double) maxWidth / (double) points;
         int x1 = maxWidth/2;
         int x2 = maxWidth/2;

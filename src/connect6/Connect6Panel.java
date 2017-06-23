@@ -9,8 +9,8 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 
 public class Connect6Panel extends JPanel {
-    private final double STONE_SIZE = 0.9; // SpielsteingrÃ¶ÃŸe von 0,0 - 1,0 (0,9 entsprechen 90%)
-    private int size; // GrÃ¶ÃŸe des Spielfeldes
+    private final double STONE_SIZE = 0.9; // Spielsteingröße von 0,0 - 1,0 (0,9 entsprechen 90%)
+    private int size; // Größe des Spielfeldes
 
     private Connect6Board connect6Board;
 

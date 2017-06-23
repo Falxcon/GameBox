@@ -78,7 +78,7 @@ public class Frame extends JFrame {
 
         menuItemPrim = new JMenuItem("Primzahlen");
         menuItemPrim.addActionListener(l -> {
-            desktopPane.add(new siebenspaltenprimzahlen.Jiframe());
+            desktopPane.add(new siebenspaltenprimzahlen.View());
         });
         menuAdd.add(menuItemPrim);
 

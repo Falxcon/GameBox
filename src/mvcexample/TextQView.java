@@ -10,41 +10,43 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;				// fuer Observer und Observable
 
-//  Das ist ein View fuer textuelle Darstellung eines Quadratischen Polynoms
-class TextQView extends JPanel implements Observer {	// Beobachter
+
+class TextQView extends JPanel implements Observer {
     JTextField
-            a = new JTextField (10),			// Textfelder fuer
-            b = new JTextField (10),			// drei Koeffizienten
-            c = new JTextField (10),			// ...
+            a = new JTextField (10),
+            b = new JTextField (10),
+            c = new JTextField (10),
             d = new JTextField (10);
     JLabel
-            al = new JLabel ("Konstante",JLabel.RIGHT),	// Labels ...
+            al = new JLabel ("Konstante",JLabel.RIGHT),
             bl = new JLabel ("Linearer Koeffizient",JLabel.RIGHT),
             cl = new JLabel ("Quadratischer Koeffizient",JLabel.RIGHT),
             dl = new JLabel ("Kubischer Koeffizient",JLabel.RIGHT);
-    Qpolynom myPolynom;				// das Modell, ein Polynom
-    TextQView (Qpolynom q) { 				// Konstuktor
-        myPolynom = q;				// merke Polynom
-        setLayout (new GridLayout(4,2,5,5));		// 3x2-Grid, 5-er Abstaende
-        add (al); add (a);				// Labels und Textfelder
-        add (bl); add (b);				//   hinzufuegen
-        add (cl); add (c);				//   ...
+
+    Qpolynom myPolynom;
+    TextQView (Qpolynom q) {
+        myPolynom = q;
+        setLayout (new GridLayout(4,2,5,5));
+        add (al); add (a);
+        add (bl); add (b);
+        add (cl); add (c);
         add (dl); add (d);
         a.setEditable (false);
-        b.setEditable (false);	        // Editierbarkeit
-        c.setEditable (false);			//   der Textfelder
+        b.setEditable (false);
+        c.setEditable (false);
         d.setEditable (false);
-    } // end Konstuktor
-    // ..
-    // ..
-    public void update (Observable o, Object arg){	// fuer Observer
-        if (o==myPolynom) repaint ();			// neu darstellen
     }
-    public void paintComponent (Graphics g) {		// Component darstllen
-        super.paintComponent (g);			// super aufrufen
-        a.setText (""+myPolynom.getConstant());		// Textfelder neu schreiben
-        b.setText (""+myPolynom.getLinear());		//    dabei get... Methoden
-        c.setText (""+myPolynom.getQuadratic());	//    aus Modell benutzen
+
+
+    public void update (Observable o, Object arg){
+        if (o==myPolynom) repaint ();
+
+    }
+    public void paintComponent (Graphics g) {
+        super.paintComponent (g);
+        a.setText (""+myPolynom.getConstant());
+        b.setText (""+myPolynom.getLinear());
+        c.setText (""+myPolynom.getQuadratic());
         d.setText (""+myPolynom.getKubik());
     }
-} // end TextQView
+}
